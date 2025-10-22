@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<language>
+  <page id="314154" voice="no">
+    <t id="1">..: Sector Explorer :..</t>
+    <t id="2">\033C%1\033X has started exploring \033C%2\033X</t>
+    <t id="3">\033C%1\033X has finished exploring \033C%2\033X</t>
+    <t id="4">%1 has finished exploring %2</t>
+    <t id="5">Center around sector core</t>
+    <t id="6">Skip hexagon pattern</t>
+    <t id="7">Visit lockboxes</t>
+    <t id="8">Continue to next sector</t>
+    <t id="9">Global blacklist</t>
+    <t id="10">Private blacklist</t>
+    <t id="11">Exploration distance</t>
+    <t id="12">Sector Explorer</t>
+    <t id="13">Satellite probes</t>
+    <t id="14">Distance between rings</t>
+    <t id="15">Visit abandoned ships</t>
+    <t id="16">Visit data vaults</t>
+    <t id="17">Visit stations</t>
+    <t id="18">Reset progress</t>
+    <t id="19">Notifications</t>
+  </page>
+</language>
