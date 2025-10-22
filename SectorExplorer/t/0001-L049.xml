@@ -1,0 +1,23 @@
+<language>
+  <page id="314154" voice="no">
+    <t id="1">..: Sektor Erkunder :..</t>
+    <t id="2">\033C%1\033X hat mit der Erkundung von \033C%2\033X begonnen.</t>
+    <t id="3">\033C%1\033X hat die Erkundung von \033C%2\033X abgeschlossen.</t>
+    <t id="4">%1 hat die Erkundung von %2 abgeschlossen.</t>
+    <t id="5">Kreise um den Sektorkern</t>
+    <t id="6">Skippe Hexagon-Muster</t>
+    <t id="7">Suche nach Lockboxen</t>
+    <t id="8">Weiter im nächsten Sektor</t>
+    <t id="9">Globale Sektor Sperrliste</t>
+    <t id="10">Private Sektor Sperrliste</t>
+    <t id="11">Erkundungstiefe</t>
+    <t id="12">\033#B6c99c6b#Sektor Erkunder</t>
+    <t id="13">Satellitensonden</t>
+    <t id="14">Distance between rings</t>
+    <t id="15">Visit abandoned ships</t>
+    <t id="16">Visit data vaults</t>
+    <t id="17">Visit stations</t>
+    <t id="18">Reset progress</t>
+    <t id="19">Notifications</t>
+  </page>
+</language>

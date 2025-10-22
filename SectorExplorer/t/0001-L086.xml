@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<language>
+  <page id="314154" voice="no">
+    <t id="1">..: 星区探索 :..</t>
+    <t id="2">\033C%1\033X 已开始探索 \033C%2\033X</t>
+    <t id="3">\033C%1\033X 探索已完成 \033C%2\033X</t>
+    <t id="4">%1 完成了对 %2 的探索</t>
+    <t id="5">围绕星区中心点探索</t>
+    <t id="6">探索时走六边形图案</t>
+    <t id="7">扫描保险箱</t>
+    <t id="8">继续下一个星区</t>
+    <t id="9">使用全局黑名单</t>
+    <t id="10">黑名单</t>
+    <t id="11">探索距离</t>
+    <t id="12">星区探索</t>
+    <t id="13">Satellite probes</t>
+    <t id="14">Distance between rings</t>
+    <t id="15">Visit abandoned ships</t>
+    <t id="16">Visit data vaults</t>
+    <t id="17">Visit stations</t>
+    <t id="18">Reset progress</t>
+    <t id="19">Notifications</t>
+  </page>
+</language> 

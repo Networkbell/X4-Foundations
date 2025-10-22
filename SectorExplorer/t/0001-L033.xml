@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<language>
+  <page id="314154" voice="no">
+	<t id="1">..: Explorateur de Secteur :..</t>
+	<t id="2">\033C%1\033X a commencé à explorer \033C%2\033X</t>
+	<t id="3">\033C%1\033X a terminé l’exploration de \033C%2\033X</t>
+	<t id="4">%1 a terminé l’exploration de %2</t>
+	<t id="5">Centrer sur le noyau du secteur</t>
+	<t id="6">Ignorer le motif hexagonal</t>
+	<t id="7">Visiter les coffres verrouillés</t>
+	<t id="8">Continuer vers le secteur suivant</t>
+	<t id="9">Liste noire globale</t>
+	<t id="10">Liste noire privée</t>
+	<t id="11">Distance d’exploration</t>
+	<t id="12">Explorateur de Secteur</t>
+	<t id="13">Sondes satellites</t>
+	<t id="14">Distance entre les anneaux</t>
+	<t id="15">Visiter les vaisseaux abandonnés</t>
+	<t id="16">Visiter les coffres de données</t>
+	<t id="17">Visiter les stations</t>
+	<t id="18">Réinitialiser la progression</t>
+	<t id="19">Notifications</t>
+  </page>
+</language>

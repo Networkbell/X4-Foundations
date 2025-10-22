@@ -1,0 +1,23 @@
+<language>
+<page id="314154" voice="no">
+<t id="1">..: Esplorazione del settore :..</t>
+<t id="2">\033C%1\033X ha iniziato l'esplorazione di \033C%2\033X</t>
+<t id="3">\033C%1\033X ha finito l'esplorazione di \033C%2\033X</t>
+<t id="4">%1 ha finito l'esplorazione di %2</t>
+<t id="5">Centro intorno al sector core</t>
+<t id="6">Evita schema esagonale</t>
+<t id="7">Visita container blindati</t>
+<t id="8">Continua al settore successivo</t>
+<t id="9">Lista nera globale</t>
+<t id="10">Lista nera privata</t>
+<t id="11">Distanza d'esplorazione</t>
+<t id="12">Esplora settore</t>
+<t id="13">Satelliti e seonde</t>
+<t id="14">Distanza tra gli anelli</t>
+<t id="15">Visit navi abbandonate</t>
+<t id="16">Visita data vault</t>
+<t id="17">Visita stazioni</t>
+<t id="18">Reset progress</t>
+<t id="19">Notifications</t>
+</page>
+</language>
