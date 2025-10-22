@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<content name="Sector Explorer" id="ws_2074838459" author="Assailer" version="144" date="2024-06-21" save="0" enabled="1" description="Sector Explorer&#13;&#10;Version 1.44&#13;&#10;&#13;&#10;There is no known compatibility issue with any other mods, also uninstalling shall not affect your save games." sync="false" lastupdate="1718957381">
+  <text language="7" name="Sector Explorer" description="Мод предназначен для исследования секторов."/>
+  <text language="86" name="Sector Explorer" description="星区探索"/>
+  <text language="33" name="Sector Explorer" description="Sector Explorer"/>
+  <text language="34" name="Sector Explorer" description="Sector Explorer"/>
+  <text language="39" name="Sector Explorer" description="Esplorazione del settore"/>
+  <text language="44" name="Sector Explorer" description="Sector Explorer"/>
+  <text language="49" name="Sector Explorer" description="Der Sektor Explorer erkundet automatisch den Sektor."/>
+  <text language="88" name="Sector Explorer" description="Sector Explorer"/>
+</content>
