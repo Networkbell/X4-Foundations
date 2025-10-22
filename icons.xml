@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<diff>
-  <add sel="/icons">
-    <icon name="order_sectorexplorer" texture="assets\fx\gui\textures\order\order_explore.tga" height="32" width="32"></icon>
-  </add>
-</diff>
