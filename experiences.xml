@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+<add sel="/experiences">
+  <experience id="fs_exp">
+    <skill ref="piloting">
+      <individual base="1.0" falloff="0.43" limit="15"/>
+    </skill>
+    <skill ref="morale">
+      <individual base="1.0" falloff="0.43" limit="15"/>
+    </skill>
+  </experience>
+</add>
+</diff>
