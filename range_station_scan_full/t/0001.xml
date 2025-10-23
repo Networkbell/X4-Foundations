@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<language>
+	<page id="1819190152" voice="no">
+		<t id="1">Station Scanner Mk2</t>
+		<t id="2">Consumable. While in a ship and in scan mode, instantly reveals the entire station and its components upon first discovery of a station module. This operation consumes the scanner charge.</t>
+		<t id="3">EVA Scanner Mk1</t>
+		<t id="4">Personal upgrade. While in a spacesuit, if the station is more than 90% discovered, instantly deep-scans all station modules and completes the station scan if needed.</t>
+		<t id="5">EVA Scanner Mk2</t>
+		<t id="6">Personal upgrade. While in a spacesuit, if the station is more than 80% discovered, instantly deep-scans all station modules and completes the station scan if needed.</t>
+		<t id="7">EVA Scanner Mk3</t>
+		<t id="8">Personal upgrade. While in a spacesuit, if the station is more than 70% discovered, instantly deep-scans all station modules and completes the station scan if needed.</t>
+		<t id="9">EVA Scanner Mk4</t>
+		<t id="10">Personal upgrade. While in a spacesuit, if the station is more than 50% discovered, instantly deep-scans all station modules and completes the station scan if needed.</t>
+		<t id="11">EVA Scanner Mk5</t>
+		<t id="12">Personal upgrade. While in a spacesuit, instantly deep-scans all station modules regardless of discovery percentage and completes the station scan if needed.</t>
+	</page>
+</language>
+
+

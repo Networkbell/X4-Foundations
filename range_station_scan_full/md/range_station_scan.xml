@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mdscript name="range_station_scan" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="md.xsd">
+	<cues>
+		<cue name="rss_init" instantiate="true" namespace="this">
+			<conditions>
+				<check_any>
+					<event_game_loaded/>
+					<event_game_started/>
+				</check_any>
+			</conditions>
+			<actions>
+				<set_value name="global.$rss_run_guard_ship" exact="false"/>
+				<set_value name="global.$rss_run_guard_suit_dispatch" exact="false"/>
+			</actions>
+		</cue>
+
+		<!-- SHIP -->
+		<cue name="rss_run_ship_on_discovery" instantiate="true" namespace="this">
+			<conditions>
+				<event_player_discovered_object/>
+				<check_value value="event.param.station and not global.$rss_run_guard_ship and not global.$rss_run_guard_suit_dispatch"/>
+				<check_value value="player.occupiedship and player.occupiedship.isclass.ship"/>
+				<check_value value="not (player.spacesuit and player.occupiedship == player.spacesuit)"/>
+				<check_value value="player.activity == activity.scan"/>
+				<check_value value="event.param.station.distanceto.{player.entity} lt 10km"/>
+				<check_value value="event.param.station.revealedpercentage lt 100"/>
+				<check_value value="player.entity.inventory.{ware.rss_ship_mk2}.count ge 1"/>
+			</conditions>
+			<actions>
+				<set_value name="global.$rss_run_guard_ship" exact="true"/>
+					<do_if value="event.param.station.revealedpercentage lt 100">
+						<set_object_scanned object="event.param.station"/>
+						<remove_inventory object="player" ware="ware.rss_ship_mk2" amount="1"/>
+					</do_if>
+				<set_value name="global.$rss_run_guard_ship" exact="false"/>
+			</actions>
+		</cue>
+
+		<!-- SPACESUIT  -->
+		<cue name="rss_run_spacesuit_dispatch" instantiate="true" namespace="this">
+			<conditions>
+				<event_player_discovered_object/>
+				<check_value value="event.param.isclass.module and event.param.station and not global.$rss_run_guard_suit_dispatch and not global.$rss_run_guard_ship"/>
+				<check_value value="player.spacesuit and player.occupiedship == player.spacesuit"/>
+				<check_value value="player.activity == activity.scan"/>
+				<check_value value="event.param.station.distanceto.{player.entity} lt 5km"/>
+				</conditions>
+			<actions>
+				<set_value name="global.$rss_run_guard_suit_dispatch" exact="true"/>
+					<!-- MK5 >= 0 (fallback) -->
+					<do_if value="player.entity.inventory.{ware.rss_spacesuit_mk5}.count ge 1">
+						<set_object_scanned object="event.param"/>
+						<do_if value="event.param.station.revealedpercentage lt 100">
+							<set_object_scanned object="event.param.station"/>
+						</do_if>
+					</do_if>
+
+					<!-- MK4 > 50 -->
+					<do_if value="player.entity.inventory.{ware.rss_spacesuit_mk4}.count ge 1 and not (player.entity.inventory.{ware.rss_spacesuit_mk5}.count ge 1)">
+						<do_if value="event.param.station.revealedpercentage gt 50">
+							<set_object_scanned object="event.param"/>
+							<do_if value="event.param.station.revealedpercentage lt 100">
+								<set_object_scanned object="event.param.station"/>
+							</do_if>
+						</do_if>
+					</do_if>
+
+					<!-- MK3 > 70 -->
+					<do_if value="player.entity.inventory.{ware.rss_spacesuit_mk3}.count ge 1 and not (player.entity.inventory.{ware.rss_spacesuit_mk4}.count ge 1) and not (player.entity.inventory.{ware.rss_spacesuit_mk5}.count ge 1)">
+						<do_if value="event.param.station.revealedpercentage gt 70">
+							<set_object_scanned object="event.param"/>
+							<do_if value="event.param.station.revealedpercentage lt 100">
+								<set_object_scanned object="event.param.station"/>
+							</do_if>
+						</do_if>
+					</do_if>
+
+					<!-- MK2 > 80 -->
+					<do_if value="player.entity.inventory.{ware.rss_spacesuit_mk2}.count ge 1 and not (player.entity.inventory.{ware.rss_spacesuit_mk3}.count ge 1) and not (player.entity.inventory.{ware.rss_spacesuit_mk4}.count ge 1) and not (player.entity.inventory.{ware.rss_spacesuit_mk5}.count ge 1)">
+						<do_if value="event.param.station.revealedpercentage gt 80">
+							<set_object_scanned object="event.param"/>
+							<do_if value="event.param.station.revealedpercentage lt 100">
+								<set_object_scanned object="event.param.station"/>
+							</do_if>
+						</do_if>
+					</do_if>
+
+					<!-- MK1 > 90 -->
+					<do_if value="player.entity.inventory.{ware.rss_spacesuit_mk1}.count ge 1 and not (player.entity.inventory.{ware.rss_spacesuit_mk2}.count ge 1) and not (player.entity.inventory.{ware.rss_spacesuit_mk3}.count ge 1) and not (player.entity.inventory.{ware.rss_spacesuit_mk4}.count ge 1) and not (player.entity.inventory.{ware.rss_spacesuit_mk5}.count ge 1)">
+						<do_if value="event.param.station.revealedpercentage gt 90">
+							<set_object_scanned object="event.param"/>
+							<do_if value="event.param.station.revealedpercentage lt 100">
+								<set_object_scanned object="event.param.station"/>
+							</do_if>
+						</do_if>
+					</do_if>
+				<set_value name="global.$rss_run_guard_suit_dispatch" exact="false"/>
+			</actions>
+		</cue>
+
+	</cues>
+</mdscript>

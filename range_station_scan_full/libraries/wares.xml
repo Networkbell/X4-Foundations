@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<diff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<add sel="/wares">
+
+		<ware id="rss_ship_mk2"
+			  name="{1819190152,1}"
+			  description="{1819190152,2}"
+			  group="software"
+			  transport="inventory"
+			  volume="1"
+			  tags="disallowdrop inventory noblueprint noplayerblueprint scanner software">
+			<price min="900" average="1000" max="1100"/>
+			<icon video="ware_software_macro" />
+		</ware>
+
+		<ware id="rss_spacesuit_mk1"
+			  name="{1819190152,3}"
+			  description="{1819190152,4}"
+			  group="software"
+			  transport="inventory"
+			  volume="1"
+			  tags="disallowdrop equipment inventory noblueprint noplayerblueprint personalupgrade scanner software">
+			<price min="9000" average="10000" max="11000"/>
+			<icon video="ware_software_macro" />
+		</ware>
+		
+		<ware id="rss_spacesuit_mk2"
+			  name="{1819190152,5}"
+			  description="{1819190152,6}"
+			  group="software"
+			  transport="inventory"
+			  volume="1"
+			  tags="disallowdrop equipment inventory noblueprint noplayerblueprint personalupgrade scanner software">			
+			<price min="44000" average="45000" max="46000"/>
+			<icon video="ware_software_macro" />
+		</ware>
+
+		<ware id="rss_spacesuit_mk3"
+			  name="{1819190152,7}"
+			  description="{1819190152,8}"
+			  group="software"
+			  transport="inventory"
+			  volume="1"
+			  tags="disallowdrop equipment inventory noblueprint noplayerblueprint personalupgrade scanner software">
+			<price min="110000" average="120000" max="130000"/>
+			<icon video="ware_software_macro" />
+		</ware>
+
+		<ware id="rss_spacesuit_mk4"
+			  name="{1819190152,9}"
+			  description="{1819190152,10}"
+			  group="software"
+			  transport="inventory"
+			  volume="1"
+			  tags="disallowdrop equipment inventory noblueprint noplayerblueprint personalupgrade scanner software">
+			<price min="390000" average="400000" max="410000"/>
+			<icon video="ware_software_macro" />
+		</ware>
+
+		<ware id="rss_spacesuit_mk5"
+			  name="{1819190152,11}"
+			  description="{1819190152,12}"
+			  group="software"
+			  transport="inventory"
+			  volume="1"
+			  tags="disallowdrop equipment inventory noblueprint noplayerblueprint personalupgrade scanner software">
+			<price min="1400000" average="1500000" max="1600000"/>
+			<icon video="ware_software_macro" />
+		</ware>
+
+
+
+	</add>
+</diff>

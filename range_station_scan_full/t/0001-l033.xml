@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+<add sel="/language">
+	<page id="1819190152" voice="no">
+		<t id="1">Scanner de station Mk2</t>
+		<t id="2">Consommable. En vaisseau et en mode scan, révèle instantanément toute la station et ses composants dès la première découverte de module de station. Cette opération consomme la charge du scanner.</t>
+		<t id="3">Scanner EVA Mk1</t>
+		<t id="4">Amélioration personnelle. En combinaison spatiale, si la station est découverte à plus de 90 %, scanne en profondeur tous les modules et complète la station si besoin.</t>
+		<t id="5">Scanner EVA Mk2</t>
+		<t id="6">Amélioration personnelle. En combinaison spatiale, si la station est découverte à plus de 80 %, scanne en profondeur tous les modules et complète la station si besoin.</t>
+		<t id="7">Scanner EVA Mk3</t>
+		<t id="8">Amélioration personnelle. En combinaison spatiale, si la station est découverte à plus de 70 %, scanne en profondeur tous les modules et complète la station si besoin.</t>
+		<t id="9">Scanner EVA Mk4</t>
+		<t id="10">Amélioration personnelle. En combinaison spatiale, si la station est découverte à plus de 50 %, scanne en profondeur tous les modules et complète la station si besoin.</t>
+		<t id="11">Scanner EVA Mk5</t>
+		<t id="12">Amélioration personnelle. En combinaison spatiale, scanne en profondeur tous les modules de la station, quel que soit le pourcentage de découverte, et complète la station si besoin.</t>
+	</page>
+</add>
+</diff>

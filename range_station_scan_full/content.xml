@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<content id="range_station_scan_full"
+         name="Range Station Scan Full"
+         description="Improves the range of close scan around stations with ship and spacesuit"
+         author="DamonYa"
+         version="211"
+         date="2025-10-02"
+         save="false"
+         enabled="1">
+		 
+<text language=""
+description="Improves the range of close scan around stations with ship and spacesuit. Full version with items."
+/>
+
+	
+</content>
