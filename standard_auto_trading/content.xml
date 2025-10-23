@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<content id="standard_auto_trading"
+         name="Standard AutoTrade"
+         description="Adds an intermediate trading skill between Basic AutoTrade (Mod) and Advanced AutoTrade (Vanilla)."
+         author="DamonYa"
+         version="110"
+         date="2025-10-22"
+         save="false"
+         enabled="1">
+		 
+<text language=""
+description="Adds an intermediate trading skill between Basic AutoTrade (Mod) and Advanced AutoTrade (Vanilla)."
+/>
+</content>
