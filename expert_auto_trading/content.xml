@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<content id="expert_auto_trading"
+         name="Expert AutoTrade"
+         description="Adds an expert trading skill after Advanced AutoTrade like Expert AutoMine"
+         author="DamonYa"
+         version="110"
+         date="2025-10-22"
+         save="false"
+         enabled="1">
+		 
+<text language=""
+description="Adds an expert trading skill after Advanced AutoTrade like Expert AutoMine"
+/>
+</content>

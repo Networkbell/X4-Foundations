@@ -1,0 +1,274 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<diff>
+
+	<replace sel="/aiscript/attention//do_elseif[@value=&quot;($orderdef.$id == 'TradeRoutine') or ($orderdef.$id == 'TradeRoutine_Basic') or ($orderdef.$id == 'TradeRoutine_Advanced')&quot;]">
+		<do_elseif value="($orderdef.$id == 'TradeRoutine') or ($orderdef.$id == 'TradeRoutine_Basic') or ($orderdef.$id == 'TradeRoutine_Advanced') or ($orderdef.$id == 'TradeRoutine_BasicMid') or ($orderdef.$id == 'TradeRoutine_BasicMidStandard') or ($orderdef.$id == 'TradeRoutine_BasicMidStandardAdvanced') or ($orderdef.$id == 'TradeRoutine_BasicMidStandardAdvancedExpert')">
+			<do_if value="$createdefaultorder? or (not $incompatiblewaretransport?)">
+				<set_value name="$added"/>
+				<do_if value="@this.assignedcontrolled.order.isrunning">
+					<clear_order_failure order="this.assignedcontrolled.order"/>
+				</do_if>
+				<do_if value="@$order.$warebasket_override.count or @$orderdef.$warebasket_override.count">
+					<do_if value="$createdefaultorder?">
+						<create_order id="$orderdef.$id" object="this.assignedcontrolled" default="true">
+							<param name="warebasket" value="$orderdef.$warebasket"/>
+							<param name="range" value="$orderdef.$range"/>
+							<param name="minbuy" value="$orderdef.$minbuy"/>
+							<param name="maxbuy" value="$orderdef.$maxbuy"/>
+							<param name="minsell" value="$orderdef.$minsell"/>
+							<param name="maxsell" value="$orderdef.$maxsell"/>
+							<param name="tradeforbuildstorage" value="$orderdef.$tradeforbuildstorage"/>
+							<param name="usecover" value="$orderdef.$usecover"/>
+							<param name="warebasket_override" value="$orderdef.$warebasket_override"/>
+						</create_order>
+					</do_if>
+					<do_else>
+						<set_value name="$orderdef.$warebasket" exact="$order.$warebasket"/>
+						<set_value name="$orderdef.$range" exact="$order.$range"/>
+						<set_value name="$orderdef.$minbuy" exact="$order.$minbuy"/>
+						<set_value name="$orderdef.$maxbuy" exact="$order.$maxbuy"/>
+						<set_value name="$orderdef.$minsell" exact="$order.$minsell"/>
+						<set_value name="$orderdef.$maxsell" exact="$order.$maxsell"/>
+						<set_value name="$orderdef.$tradeforbuildstorage" exact="$order.$tradeforbuildstorage"/>
+						<set_value name="$orderdef.$usecover" exact="$order.$usecover"/>
+						<set_value name="$orderdef.$warebasket_override" exact="$order.$warebasket_override"/>
+						<run_script name="$scriptname" sinceversion="2">
+							<param name="warebasket" value="$order.$warebasket"/>
+							<param name="range" value="$order.$range"/>
+							<param name="minbuy" value="$order.$minbuy"/>
+							<param name="maxbuy" value="$order.$maxbuy"/>
+							<param name="minsell" value="$order.$minsell"/>
+							<param name="maxsell" value="$order.$maxsell"/>
+							<param name="tradeforbuildstorage" value="$order.$tradeforbuildstorage"/>
+							<param name="usecover" value="$order.$usecover"/>
+							<param name="warebasket_override" value="$order.$warebasket_override"/>
+						</run_script>
+					</do_else>
+				</do_if>
+				<do_else>
+					<do_if value="$createdefaultorder?">
+						<create_order id="$orderdef.$id" object="this.assignedcontrolled" default="true">
+							<param name="warebasket" value="$orderdef.$warebasket"/>
+							<param name="range" value="$orderdef.$range"/>
+							<param name="minbuy" value="$orderdef.$minbuy"/>
+							<param name="maxbuy" value="$orderdef.$maxbuy"/>
+							<param name="minsell" value="$orderdef.$minsell"/>
+							<param name="maxsell" value="$orderdef.$maxsell"/>
+							<param name="tradeforbuildstorage" value="$orderdef.$tradeforbuildstorage"/>
+							<param name="usecover" value="$orderdef.$usecover"/>
+						</create_order>
+					</do_if>
+					<do_else>
+						<set_value name="$orderdef.$warebasket" exact="$order.$warebasket"/>
+						<set_value name="$orderdef.$range" exact="$order.$range"/>
+						<set_value name="$orderdef.$minbuy" exact="$order.$minbuy"/>
+						<set_value name="$orderdef.$maxbuy" exact="$order.$maxbuy"/>
+						<set_value name="$orderdef.$minsell" exact="$order.$minsell"/>
+						<set_value name="$orderdef.$maxsell" exact="$order.$maxsell"/>
+						<set_value name="$orderdef.$tradeforbuildstorage" exact="$order.$tradeforbuildstorage"/>
+						<set_value name="$orderdef.$usecover" exact="$order.$usecover"/>
+						<run_script name="$scriptname">
+							<param name="warebasket" value="$order.$warebasket"/>
+							<param name="range" value="$order.$range"/>
+							<param name="minbuy" value="$order.$minbuy"/>
+							<param name="maxbuy" value="$order.$maxbuy"/>
+							<param name="minsell" value="$order.$minsell"/>
+							<param name="maxsell" value="$order.$maxsell"/>
+							<param name="tradeforbuildstorage" value="$order.$tradeforbuildstorage"/>
+							<param name="usecover" value="$order.$usecover"/>
+						</run_script>
+					</do_else>
+				</do_else>
+			</do_if>
+		</do_elseif>
+	</replace>
+	
+	
+	
+	<replace sel="/aiscript/attention//do_elseif[@value=&quot;($orderdef.$id == 'MiningRoutine') or ($orderdef.$id == 'MiningRoutine_Advanced') or ($orderdef.$id == 'MiningRoutine_Basic') or ($orderdef.$id == 'MiningRoutine_Expert')&quot;]">
+		<do_elseif value="($orderdef.$id == 'MiningRoutine') or ($orderdef.$id == 'MiningRoutine_Advanced') or ($orderdef.$id == 'MiningRoutine_Basic') or ($orderdef.$id == 'MiningRoutine_Expert') or ($orderdef.$id == 'MiningRoutine_BasicMid') or ($orderdef.$id == 'MiningRoutine_BasicMidStandard') or ($orderdef.$id == 'MiningRoutine_BasicMidStandardAdvanced') or ($orderdef.$id == 'MiningRoutine_BasicMidStandardAdvancedExpert')">
+			<do_if value="(this.assignedcontrolled.primarypurpose == purpose.mine) and ($createdefaultorder? or (not $incompatiblewaretransport?) or ($commander.waretransport.indexof.{waretransport.solid} and this.assignedcontrolled.waretransport.indexof.{waretransport.solid}) or ($commander.waretransport.indexof.{waretransport.liquid} and this.assignedcontrolled.waretransport.indexof.{waretransport.liquid}))">
+				<set_value name="$added"/>
+				<do_if value="@this.assignedcontrolled.order.isrunning">
+					<clear_order_failure order="this.assignedcontrolled.order"/>
+				</do_if>
+				<do_if value="@$order.$warebasket_override.count or @$orderdef.$warebasket_override.count">
+					<do_if value="$createdefaultorder?">
+						<create_order id="$orderdef.$id" object="this.assignedcontrolled" default="true">
+							<param name="warebasket" value="$orderdef.$warebasket"/>
+							<param name="range" value="$orderdef.$range"/>
+							<param name="minbuy" value="$orderdef.$minbuy"/>
+							<param name="maxbuy" value="$orderdef.$maxbuy"/>
+							<param name="minsell" value="$orderdef.$minsell"/>
+							<param name="maxsell" value="$orderdef.$maxsell"/>
+							<param name="warebasket_override" value="$orderdef.$warebasket_override"/>
+						</create_order>
+					</do_if>
+					<do_else>
+						<set_value name="$orderdef.$warebasket" exact="$order.$warebasket"/>
+						<set_value name="$orderdef.$range" exact="$order.$range"/>
+						<set_value name="$orderdef.$minbuy" exact="$order.$minbuy"/>
+						<set_value name="$orderdef.$maxbuy" exact="$order.$maxbuy"/>
+						<set_value name="$orderdef.$minsell" exact="$order.$minsell"/>
+						<set_value name="$orderdef.$maxsell" exact="$order.$maxsell"/>
+						<set_value name="$orderdef.$warebasket_override" exact="$order.$warebasket_override"/>
+						<run_script name="$scriptname" sinceversion="2">
+							<param name="warebasket" value="$order.$warebasket"/>
+							<param name="range" value="$order.$range"/>
+							<param name="minbuy" value="$order.$minbuy"/>
+							<param name="maxbuy" value="$order.$maxbuy"/>
+							<param name="minsell" value="$order.$minsell"/>
+							<param name="maxsell" value="$order.$maxsell"/>
+							<param name="warebasket_override" value="$order.$warebasket_override"/>
+						</run_script>
+					</do_else>
+				</do_if>
+				<do_else>
+					<do_if value="$createdefaultorder?">
+						<create_order id="$orderdef.$id" object="this.assignedcontrolled" default="true">
+							<param name="warebasket" value="$orderdef.$warebasket"/>
+							<param name="range" value="$orderdef.$range"/>
+							<param name="minbuy" value="$orderdef.$minbuy"/>
+							<param name="maxbuy" value="$orderdef.$maxbuy"/>
+							<param name="minsell" value="$orderdef.$minsell"/>
+							<param name="maxsell" value="$orderdef.$maxsell"/>
+						</create_order>
+					</do_if>
+					<do_else>
+						<set_value name="$orderdef.$warebasket" exact="$order.$warebasket"/>
+						<set_value name="$orderdef.$range" exact="$order.$range"/>
+						<set_value name="$orderdef.$minbuy" exact="$order.$minbuy"/>
+						<set_value name="$orderdef.$maxbuy" exact="$order.$maxbuy"/>
+						<set_value name="$orderdef.$minsell" exact="$order.$minsell"/>
+						<set_value name="$orderdef.$maxsell" exact="$order.$maxsell"/>
+						<run_script name="$scriptname">
+							<param name="warebasket" value="$order.$warebasket"/>
+							<param name="range" value="$order.$range"/>
+							<param name="minbuy" value="$order.$minbuy"/>
+							<param name="maxbuy" value="$order.$maxbuy"/>
+							<param name="minsell" value="$order.$minsell"/>
+							<param name="maxsell" value="$order.$maxsell"/>
+						</run_script>
+					</do_else>
+				</do_else>
+			</do_if>
+			<do_elseif value="this.assignedcontrolled.primarypurpose != purpose.mine">
+				<set_value name="$failurereason" exact="{1045,158}" comment="This ship type cannot mine."/>
+			</do_elseif>
+			<do_elseif value="$incompatiblewaretransport?">
+				<set_value name="$failurereason" exact="{1045,156}" comment="This ship type cannot carry the required wares."/>
+			</do_elseif>
+		</do_elseif>
+	</replace>
+</diff>﻿<?xml version="1.0" encoding="utf-8" ?>
+<aiscript name="order.trade.routine.expert" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd">
+	<order id="TradeRoutine_BasicMidStandardAdvancedExpert" name="{1819190169, 1}" description="{1819190169, 2}" category="trade" allowinloop="false">
+		<params>
+			<param name="warebasket" required="true" default="this.ship.warebasket.list" type="list" text="{1041, 10146}" comment="Wares. List of resources that we will supply.">
+				<input_param name="type" value="'ware'"/>
+				<input_param name="cancarry" value="this.ship"/>
+			</param>
+			<param name="range" default="if @this.ship.commanderentity.$config_subordinate_range then @this.ship.commanderentity.$config_subordinate_range 
+             else (if @this.ship.commander.isclass.[class.station, class.buildstorage] then this.ship.commander.sector else (if this.ship.jobmainsector then this.ship.jobmainsector else this.sector))" type="sector" text="{1041, 10005}" comment="Anchor space"/>
+			<param name="minbuy" default="0" type="number" text="{1041, 10067}" comment="Min gate distance to gather resources. Gathering range supported if $minsell and $maxsell are provided">
+				<input_param name="startvalue" value="0"/>
+				<input_param name="min" value="0"/>
+				<input_param name="max" value="[[@this.ship.commander.tradenpc.skill.management, @this.ship.pilot.skill.piloting].max - 1, 0].max"/>
+				<input_param name="step" value="1"/>
+			</param>
+			<param name="maxbuy" default="[@this.ship.commander.tradenpc.skill.management, @this.ship.pilot.skill.piloting].max" type="number" text="{1041, 10054}" comment="Max gate distance to buy. Gathering range supported if $minsell and $maxsell are provided">
+				<input_param name="startvalue" value="0"/>
+				<input_param name="min" value="0"/>
+				<input_param name="max" value="[@this.ship.commander.tradenpc.skill.management, @this.ship.pilot.skill.piloting].max"/>
+				<input_param name="step" value="1"/>
+			</param>
+			<param name="minsell" default="0" type="number" text="{1041, 10069}" comment="Min gate distance to sell resources. Sell range supported if $minsell and $maxsell are provided">
+				<input_param name="startvalue" value="0"/>
+				<input_param name="min" value="0"/>
+				<input_param name="max" value="[[@this.ship.commander.tradenpc.skill.management, @this.ship.pilot.skill.piloting].max - 1, 0].max"/>
+				<input_param name="step" value="1"/>
+			</param>
+			<param name="maxsell" default="[@this.ship.commander.tradenpc.skill.management, @this.ship.pilot.skill.piloting].max" type="number" text="{1041, 10058}" comment="Max gate distance to sell resources. Sell range supported if $minsell and $maxsell are provided">
+				<input_param name="startvalue" value="0"/>
+				<input_param name="min" value="0"/>
+				<input_param name="max" value="[@this.ship.commander.tradenpc.skill.management, @this.ship.pilot.skill.piloting].max"/>
+				<input_param name="step" value="1"/>
+			</param>
+
+			<param name="duration" default="0s" type="time" infinitevalue="0s" advanced="true" text="{1041, 10034}" comment="Duration">
+				<input_param name="startvalue" value="0s"/>
+				<input_param name="min" value="0s"/>
+				<input_param name="max" value="24h"/>
+				<input_param name="step" value="1min"/>
+			</param>
+			<param name="tradeforbuildstorage" default="null" type="internal" comment="Only used for trade.find.commander. Set to look for trade offers on the connected build storage rather than on the commander."/>
+			<param name="usecover" default="false" type="internal" text="Use Cover" comment="used by smugglers"/>
+			<param name="debugchance" type="bool" default="0" advanced="true" text="{1041, 10086}" comment="Print debug output">
+				<input_param name="truevalue" value="100"/>
+			</param>
+			<param name="debugchance2" type="bool" default="0" advanced="true" text="{1041, 10142}" comment="Verbose debug output">
+				<input_param name="truevalue" value="100"/>
+			</param>
+		</params>
+		<skill min="80"/>
+		<requires>
+			<match shiptype="shiptype.lasertower" negate="true"/>
+			<match class="class.spacesuit" negate="true"/>
+		</requires>
+	</order>
+	<attention min="unknown">
+		<actions>
+			<run_script name="'order.trade.routine'">
+				<param name="warebasket" value="$warebasket"/>
+				<param name="range" value="$range"/>
+				<param name="minbuy" value="$minbuy"/>
+				<param name="maxbuy" value="$maxbuy"/>
+				<param name="minsell" value="$minsell"/>
+				<param name="maxsell" value="$maxsell"/>
+				<param name="duration" value="$duration"/>
+				<param name="tradeforbuildstorage" value="$tradeforbuildstorage"/>
+				<param name="usecover" value="$usecover"/>
+				<param name="debugchance" value="$debugchance"/>
+				<param name="debugchance2" value="$debugchance2"/>
+			</run_script>
+		</actions>
+	</attention>
+</aiscript>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<diff>
+	<replace sel="/aiscript/init//do_if[@value=&quot;(this.assignedcontrolled.order.id == 'TradeRoutine') or (this.assignedcontrolled.order.id == 'TradeRoutine_Basic') or (this.assignedcontrolled.order.id == 'TradeRoutine_Advanced')&quot;]">
+		<do_if value="(this.assignedcontrolled.order.id == 'TradeRoutine') or (this.assignedcontrolled.order.id == 'TradeRoutine_Basic') or (this.assignedcontrolled.order.id == 'TradeRoutine_Advanced') or (this.assignedcontrolled.order.id == 'TradeRoutine_BasicMid') or (this.assignedcontrolled.order.id == 'TradeRoutine_BasicMidStandard') or (this.assignedcontrolled.order.id == 'TradeRoutine_BasicMidStandardAdvanced') or (this.assignedcontrolled.order.id == 'TradeRoutine_BasicMidStandardAdvancedExpert')">
+			<set_value name="$thisorder" exact="this.assignedcontrolled.order"/>
+		</do_if>
+	</replace>
+
+	<replace sel="/aiscript/patch[@sinceversion='10']//do_if[@value=&quot;(this.assignedcontrolled.order.id == 'TradeRoutine') or (this.assignedcontrolled.order.id == 'TradeRoutine_Basic') or (this.assignedcontrolled.order.id == 'TradeRoutine_Advanced')&quot;]">
+		<do_if value="(this.assignedcontrolled.order.id == 'TradeRoutine') or (this.assignedcontrolled.order.id == 'TradeRoutine_Basic') or (this.assignedcontrolled.order.id == 'TradeRoutine_Advanced') or (this.assignedcontrolled.order.id == 'TradeRoutine_BasicMid') or (this.assignedcontrolled.order.id == 'TradeRoutine_BasicMidStandard') or (this.assignedcontrolled.order.id == 'TradeRoutine_BasicMidStandardAdvanced') or (this.assignedcontrolled.order.id == 'TradeRoutine_BasicMidStandardAdvancedExpert')">
+			<set_value name="$thisorder" exact="this.assignedcontrolled.order"/>
+		</do_if>
+	</replace>
+
+	<replace sel="/aiscript/attention//do_if[@value=&quot;(this.assignedcontrolled.order.id == 'TradeRoutine') or (this.assignedcontrolled.order.id == 'TradeRoutine_Basic') or (this.assignedcontrolled.order.id == 'TradeRoutine_Advanced')&quot;]">
+		<do_if value="(this.assignedcontrolled.order.id == 'TradeRoutine') or (this.assignedcontrolled.order.id == 'TradeRoutine_Basic') or (this.assignedcontrolled.order.id == 'TradeRoutine_Advanced') or (this.assignedcontrolled.order.id == 'TradeRoutine_BasicMid') or (this.assignedcontrolled.order.id == 'TradeRoutine_BasicMidStandard') or (this.assignedcontrolled.order.id == 'TradeRoutine_BasicMidStandardAdvanced') or (this.assignedcontrolled.order.id == 'TradeRoutine_BasicMidStandardAdvancedExpert')">
+			<set_order_syncpoint_reached order="this.assignedcontrolled.order"/>
+		</do_if>
+	</replace>
+</diff>
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+<add sel="/language">
+	<page id="1819190169" voice="no">
+		<t id="1">Commerce expert auto</t>
+		<t id="2">Permet de commercer en achetant et vendant de multiples ressources dans un rayon jusqu'à 15 secteurs en fonction de vos compétences de pilotages ou de gestion.</t>		
+	</page>
+</add>
+</diff>
+<?xml version="1.0" encoding="utf-8"?>
+<language>
+	<page id="1819190169" voice="no">
+		<t id="1">Expert AutoTrade</t>
+		<t id="2">Allows you to trade by buying and selling multiple wares within a radius of up to 15 sectors depending on your piloting or management skills.</t>
+		</page>
+</language>
+
+
