@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<content id="standard_auto_mining"
+         name="Standard AutoMine"
+         description="Adds an intermediate mining skill between Basic AutoMine (Mod) and Advanced AutoMine (Vanilla)."
+         author="DamonYa"
+         version="110"
+         date="2025-10-22"
+         save="false"
+         enabled="1">
+		 
+<text language=""
+description="Adds an intermediate mining skill between Basic AutoMine (Mod) and Advanced AutoMine (Vanilla)."
+/>
+</content>
