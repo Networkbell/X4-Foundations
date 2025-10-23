@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<content id="enhanced_auto_mining_trading"
+         name="Enhanced AutoMine AutoTrade"
+         description="Adds basic, intermediate, expert auto-mining and auto-trading skills."
+         author="DamonYa"
+         version="110"
+         date="2025-10-22"
+         save="false"
+         enabled="1">
+		 
+<text language=""
+description="Adds basic, intermediate, expert auto-mining and auto-trading skills."
+/>
+</content>
