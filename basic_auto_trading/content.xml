@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<content id="basic_auto_trading"
+         name="Basic AutoTrade"
+         description="Adds an intermediate trading skill between basic local trading and advanced trading."
+         author="DamonYa"
+         version="110"
+         date="2025-10-22"
+         save="false"
+         enabled="1">
+		 
+<text language=""
+description="Adds an intermediate trading skill between basic local trading and advanced trading."
+/>
+</content>
