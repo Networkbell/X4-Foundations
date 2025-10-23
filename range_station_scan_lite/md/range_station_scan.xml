@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mdscript name="range_station_scan" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="md.xsd">
+	<cues>
+		<cue name="rss_init" instantiate="true" namespace="this">
+			<conditions>
+				<check_any>
+					<event_game_loaded/>
+					<event_game_started/>
+				</check_any>
+			</conditions>
+			<actions>
+				<set_value name="global.$rss_run_guard_ship" exact="false"/>
+				<set_value name="global.$rss_run_guard_suit" exact="false"/>
+			</actions>
+		</cue>
+
+		<!-- SHIP: -->
+		<cue name="rss_run_ship_on_discovery" instantiate="true" namespace="this">
+			<conditions>
+				<event_player_discovered_object/>
+				<check_value value="event.param.station and not global.$rss_run_guard_ship and not global.$rss_run_guard_suit"/>
+				<check_value value="player.occupiedship and player.occupiedship.isclass.ship"/>
+				<check_value value="not (player.spacesuit and player.occupiedship == player.spacesuit)"/>
+				<check_value value="player.activity == activity.scan"/>
+				<check_value value="event.param.station.distanceto.{player.entity} lt 10km"/>
+				<check_value value="event.param.station.revealedpercentage lt 100"/>
+			</conditions>
+			<actions>
+				<set_value name="global.$rss_run_guard_ship" exact="true"/>
+					<do_if value="event.param.station.revealedpercentage lt 100">
+						<set_object_scanned object="event.param.station"/>
+					</do_if>
+				<set_value name="global.$rss_run_guard_ship" exact="false"/>
+			</actions>
+		</cue>
+
+		<!-- SPACESUIT:  -->
+		<cue name="rss_run_spacesuit_modules" instantiate="true" namespace="this">
+			<conditions>
+				<event_player_discovered_object/>
+				<check_value value="event.param.isclass.module and event.param.station and not global.$rss_run_guard_suit and not global.$rss_run_guard_ship"/>
+				<check_value value="player.spacesuit and player.occupiedship == player.spacesuit"/>
+				<check_value value="player.activity == activity.scan"/>
+				<check_value value="event.param.station.distanceto.{player.entity} lt 5km"/>
+			</conditions>
+			<actions>
+				<set_value name="global.$rss_run_guard_suit" exact="true"/>
+					<set_object_scanned object="event.param"/>
+					<!-- Fallback:  -->
+					<do_if value="event.param.station.revealedpercentage lt 100">
+						<set_object_scanned object="event.param.station"/>
+					</do_if>
+				<set_value name="global.$rss_run_guard_suit" exact="false"/>
+			</actions>
+		</cue>
+	</cues>
+</mdscript>
