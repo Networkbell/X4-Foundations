@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<diff>
+	<add sel="//colormap/colors">
+	
+<!-- 
+*_weak_glow → 0.05
+*_moderate_glow → 0.2 
+*_glow → 0.5 
+ -->
+
+
+		<!-- Argon -->
+		<!-- Argon Federation -->
+		<color id="color_faction_argon" r="6"   g="77"  b="154" a="255" glow="0.2"/>
+		<!-- Antigone Republic -->
+		<color id="color_faction_antigone" r="50"  g="145" b="247" a="255" glow="0.05"/>
+		<!-- Hatikvah Free League -->
+		<color id="color_faction_hatikvah" r="144" g="196" b="251" a="255" glow="0.05"/>
+
+		<!-- Boron -->
+		<!-- Queendom of Boron -->
+		<color id="color_faction_boron" r="179" g="143" b="252" a="255" glow="0.05"/>
+
+		<!-- Paranid -->
+		<!-- Godrealm of the Paranid -->
+		<color id="color_faction_paranid" r="177" g="0"   b="177" a="255" glow="0.05"/>
+		<!-- Alliance of the Word -->
+		<color id="color_faction_alliance" r="255" g="0"   b="255" a="255" glow="0.2"/>
+		<!-- Holy Order of the Pontifex -->
+		<color id="color_faction_holyorder" r="255" g="159" b="255" a="255" glow="0.05"/>
+		<!-- Realm of the Trinity -->
+		<color id="color_faction_trinity" r="255" g="214" b="255" a="255" glow="0.2"/>
+		<!-- Holy Order Faithful -->
+		<color id="color_faction_holyorderfanatic" r="183" g="12"  b="88"  a="255" glow="0.2"/>
+		<!-- Duke's Buccaneers -->
+		<color id="color_faction_buccaneers" r="192" g="128" b="158" a="255" glow="0.2"/>
+
+		<!-- Teladi -->
+		<!-- Teladi Company -->
+		<color id="color_faction_teladi" r="162" g="190" b="50"   a="255" glow="0.2"/>
+		<!-- Ministry of Finance -->
+		<color id="color_faction_ministry" r="255" g="255" b="0"   a="255" glow="0.05"/>
+		<!-- Scale Plate Pact -->
+		<color id="color_faction_scaleplate" r="223" g="255" b="156" a="255" glow="0.05"/>
+		
+		<!-- Enemies -->
+		<!-- Xenon -->
+		<color id="color_faction_xenon" r="199" g="0"   b="0"   a="255" glow="0.2"/>
+		<!-- Kha'ak -->
+		<color id="color_faction_khaak" r="255" g="77"  b="77"  a="255" glow="0.2"/>
+
+		<!-- Splits -->
+		<!-- Family Zyarth -->
+		<color id="color_faction_split" r="179" g="97"  b="0"   a="255" glow="0.05"/>
+		<!-- Free Families -->
+		<color id="color_faction_freesplit" r="255" g="139" b="0"   a="255" glow="0.05"/>
+		<!-- Fallen Families -->
+		<color id="color_faction_fallensplit" r="255" g="153" b="153" a="255" glow="0.2"/>
+		<!-- Court of Curbs -->
+		<color id="color_faction_court" r="255" g="185" b="102" a="255" glow="0.2"/>
+
+		<!-- Terran -->
+		<!-- Terran Protectorate -->
+		<color id="color_faction_terran" r="5"   g="144" b="116" a="255" glow="0.05"/>
+		<!-- Segaris Pioneers -->
+		<color id="color_faction_pioneers" r="9"   g="225" b="229" a="255" glow="0.05"/>
+		<!-- Yaki -->
+		<color id="color_faction_yaki" r="159" g="95"  b="87"  a="255" glow="0.2"/>
+
+		<!-- Avarice -->
+		<!-- Riptide Rakers (loanshark) -->
+		<color id="color_faction_loanshark" r="134" g="53"  b="7"   a="255" glow="0.2"/>
+		<!-- Vigor Syndicate (scavenger) -->
+		<color id="color_faction_scavenger" r="139" g="133" b="6"   a="255" glow="0.2"/>
+
+		<!-- Timelines -->
+		<!-- Quettanauts (kaori) -->
+		<color id="color_faction_kaori" r="252" g="245" b="192" a="255" glow="0.05"/>
+
+		<!-- Player -->
+		<color id="color_faction_player" r="77"  g="255" b="77"  a="255" glow="0.05"/>
+		<!-- Civilian -->
+		<color id="color_faction_civilian" r="192" g="192" b="192" a="255" glow="0.05"/>
+		<!-- Criminal -->
+		<color id="color_faction_criminal" r="179" g="0"   b="0"   a="255" glow="0.2"/>
+		<!-- Smuggler -->
+		<color id="color_faction_smuggler" r="149" g="0"   b="0"   a="255" glow="0.2"/>
+		<!-- Ownerless -->
+		<color id="color_faction_ownerless" r="212" g="212" b="212" a="255" glow="0.05"/>
+		<!-- Visitor -->
+		<color id="color_faction_visitor" r="255" g="255" b="255" a="255" glow="0.2"/>
+	</add>
+
+	<replace sel="//colormap/mappings/mapping[@id='faction_argon']">
+		<mapping id="faction_argon" ref="color_faction_argon"/>
+	</replace>
+	<replace sel="//colormap/mappings/mapping[@id='faction_antigone']">
+		<mapping id="faction_antigone" ref="color_faction_antigone"/>
+	</replace>
+	<replace sel="//colormap/mappings/mapping[@id='faction_hatikvah']">
+		<mapping id="faction_hatikvah" ref="color_faction_hatikvah"/>
+	</replace>
+	<replace sel="//colormap/mappings/mapping[@id='faction_boron']">
+		<mapping id="faction_boron" ref="color_faction_boron"/>
+	</replace>
+	<replace sel="//colormap/mappings/mapping[@id='faction_paranid']">
+		<mapping id="faction_paranid" ref="color_faction_paranid"/>
+	</replace>
+	<replace sel="//colormap/mappings/mapping[@id='faction_alliance']">
+		<mapping id="faction_alliance" ref="color_faction_alliance"/>
+	</replace>
+	<replace sel="//colormap/mappings/mapping[@id='faction_holyorder']">
+		<mapping id="faction_holyorder" ref="color_faction_holyorder"/>
+	</replace>
+	<replace sel="//colormap/mappings/mapping[@id='faction_trinity']">
+		<mapping id="faction_trinity" ref="color_faction_trinity"/>
+	</replace>
+	<replace sel="//colormap/mappings/mapping[@id='faction_holyorderfanatic']">
+		<mapping id="faction_holyorderfanatic" ref="color_faction_holyorderfanatic"/>
+	</replace>
+	<replace sel="//colormap/mappings/mapping[@id='faction_buccaneers']">
+		<mapping id="faction_buccaneers" ref="color_faction_buccaneers"/>
+	</replace>
+	<replace sel="//colormap/mappings/mapping[@id='faction_teladi']">
+		<mapping id="faction_teladi" ref="color_faction_teladi"/>
+	</replace>
+	<replace sel="//colormap/mappings/mapping[@id='faction_ministry']">
+		<mapping id="faction_ministry" ref="color_faction_ministry"/>
+	</replace>
+	<replace sel="//colormap/mappings/mapping[@id='faction_scaleplate']">
+		<mapping id="faction_scaleplate" ref="color_faction_scaleplate"/>
+	</replace>
+	<replace sel="//colormap/mappings/mapping[@id='faction_xenon']">
+		<mapping id="faction_xenon" ref="color_faction_xenon"/>
+	</replace>
+	<replace sel="//colormap/mappings/mapping[@id='faction_khaak']">
+		<mapping id="faction_khaak" ref="color_faction_khaak"/>
+	</replace>
+	<replace sel="//colormap/mappings/mapping[@id='faction_split']">
+		<mapping id="faction_split" ref="color_faction_split"/>
+	</replace>
+	<replace sel="//colormap/mappings/mapping[@id='faction_freesplit']">
+		<mapping id="faction_freesplit" ref="color_faction_freesplit"/>
+	</replace>
+	<replace sel="//colormap/mappings/mapping[@id='faction_fallensplit']">
+		<mapping id="faction_fallensplit" ref="color_faction_fallensplit"/>
+	</replace>
+	<replace sel="//colormap/mappings/mapping[@id='faction_court']">
+		<mapping id="faction_court" ref="color_faction_court"/>
+	</replace>
+	<replace sel="//colormap/mappings/mapping[@id='faction_terran']">
+		<mapping id="faction_terran" ref="color_faction_terran"/>
+	</replace>
+	<replace sel="//colormap/mappings/mapping[@id='faction_pioneers']">
+		<mapping id="faction_pioneers" ref="color_faction_pioneers"/>
+	</replace>
+	<replace sel="//colormap/mappings/mapping[@id='faction_yaki']">
+		<mapping id="faction_yaki" ref="color_faction_yaki"/>
+	</replace>
+	<replace sel="//colormap/mappings/mapping[@id='faction_loanshark']">
+		<mapping id="faction_loanshark" ref="color_faction_loanshark"/>
+	</replace>
+	<replace sel="//colormap/mappings/mapping[@id='faction_scavenger']">
+		<mapping id="faction_scavenger" ref="color_faction_scavenger"/>
+	</replace>
+	<replace sel="//colormap/mappings/mapping[@id='faction_kaori']">
+		<mapping id="faction_kaori" ref="color_faction_kaori"/>
+	</replace>
+	<replace sel="//colormap/mappings/mapping[@id='faction_player']">
+		<mapping id="faction_player" ref="color_faction_player"/>
+	</replace>
+	<replace sel="//colormap/mappings/mapping[@id='faction_civilian']">
+		<mapping id="faction_civilian" ref="color_faction_civilian"/>
+	</replace>
+	<replace sel="//colormap/mappings/mapping[@id='faction_criminal']">
+		<mapping id="faction_criminal" ref="color_faction_criminal"/>
+	</replace>
+	<replace sel="//colormap/mappings/mapping[@id='faction_smuggler']">
+		<mapping id="faction_smuggler" ref="color_faction_smuggler"/>
+	</replace>
+	<replace sel="//colormap/mappings/mapping[@id='faction_ownerless']">
+		<mapping id="faction_ownerless" ref="color_faction_ownerless"/>
+	</replace>
+	<replace sel="//colormap/mappings/mapping[@id='faction_visitor']">
+		<mapping id="faction_visitor" ref="color_faction_visitor"/>
+	</replace>
+</diff>

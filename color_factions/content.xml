@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<content id="color_factions"
+         name="Color Factions"
+         description="Changes the color of the factions."
+         author="DamonYa"
+         version="101"
+         date="2025-10-16"
+         save="false"
+         enabled="1">
+		 
+<text language=""
+description="Changes the color of the factions."
+/>
+</content>
