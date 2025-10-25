@@ -29,6 +29,7 @@
 			<param name="fs_satscan" default="false" type="bool" text="{314154, 13}"/>
 			<param name="fs_reset" default="false" type="bool" text="{314154, 18}"/>
 			<param name="fs_notify" default="true" type="bool" text="{314154, 19}"/>
+			<param name="fs_unique" default="true" type="bool" text="Explore unique sectors only (no revisits)"/>
 		</params>
 		<requires>
 			<match shiptype="shiptype.lasertower" negate="true"/>
@@ -95,6 +96,16 @@
 				<set_value name="$fs_range" exact="0"/>
 				<do_while value="$fs_range lt 30">
 					<find_sector_in_range name="$fs_targets" object="$ship" mindistance="$fs_range" maxdistance="$fs_range" multiple="true"/>
+
+					<do_if value="$fs_unique">
+						<do_all exact="$fs_targets.count" reverse="true" counter="$ti">
+							<set_value name="$candidate" exact="$fs_targets.{$ti}"/>
+							<do_if value="@global.$fs_explored_sectors.{$candidate}.{3}">
+								<remove_value name="$fs_targets.{$ti}"/>
+							</do_if>
+						</do_all>
+						<remove_value name="$candidate"/>
+					</do_if>
 					
 					<do_if value="$fs_targets.count == 0">
 						<resume label="explorer_objects"/>
@@ -147,7 +158,15 @@
 									</do_if>
 
 									<do_if value="$allow">
-										<set_value name="global.$fs_explored_sectors.{$fs_target}.{2}" exact="player.age + 600s"/>
+										
+										<do_if value="$fs_unique">
+											<!-- mark fully explored and long cooldown when unique mode is ON -->
+											<set_value name="global.$fs_explored_sectors.{$fs_target}" exact="table[{1} = $fs_radius, {2} = player.age + 90d, {3} = true]"/>
+										</do_if>
+										<do_else>
+											<!-- keep current short cooldown when unique mode is OFF -->
+											<set_value name="global.$fs_explored_sectors.{$fs_target}.{2}" exact="player.age + 600s"/>
+										</do_else>
 
 										<resume label="explorer_travelling"/>
 									</do_if>
@@ -186,6 +205,8 @@
 
 			<stop_moving object="$ship"/>
 
+			<set_value name="$sector" exact="$fs_target"/>
+
 			<write_to_logbook category="general" title="{314154, 1}" text="{314154, 2}.[ $ship.name, $sector.knownname]" />
 
 			<wait min="1s" max="2s"/>
@@ -201,6 +222,12 @@
 
 			<do_all exact="$fs_targets.count" reverse="true" counter="$ti">
 				<do_if value="@$fs_targets.{$ti}.highway.islocalhighway">
+					<remove_value name="$fs_targets.{$ti}"/>
+				</do_if>
+			</do_all>
+
+			<do_all exact="$fs_targets.count" reverse="true" counter="$ti">
+				<do_if value="@$fs_targets.{$ti}.isblacklisted.{blacklisttype.sectoractivity}.{blacklistgroup.civilian}.{$ship}">
 					<remove_value name="$fs_targets.{$ti}"/>
 				</do_if>
 			</do_all>
