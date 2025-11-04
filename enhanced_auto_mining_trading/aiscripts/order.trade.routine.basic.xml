@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<diff>
+	<replace sel="/aiscript/order[@id='TradeRoutine_Basic']">
+		<order id="TradeRoutine_Basic" name="{1819190161, 1}" description="{1041, 842}" category="trade" allowinloop="false">
+    <params>
+      <param name="warebasket" required="true" default="this.ship.warebasket.random" type="ware" text="{1041, 10144}" comment="Ware. Resource that we will supply.">
+        <input_param name="cancarry" value="this.ship"/>
+      </param>
+      <param name="range" default="if @this.ship.commanderentity.$config_subordinate_range then @this.ship.commanderentity.$config_subordinate_range 
+             else (if (@this.ship.commander.sector.exists and (this.ship.commander.isclass.[class.station, class.buildstorage] or this.ship.commander.type == shiptype.resupplier)) then this.ship.commander.sector else (if this.ship.jobmainsector then this.ship.jobmainsector else this.sector))" type="sector" text="{1041, 10005}" comment="Anchor space">
+        <patch condition="not $range" value="if this.sector then this.sector else (if this.zone.isclass.highway then this.zone.destination.sector else null)" sinceversion="1"/>
+      </param>
+      <param name="minbuy" default="0" type="internal" text="{1041, 10067}" comment="Min gate distance to gather resources. Gathering range supported if $minsell and $maxsell are provided"/>
+      <param name="maxbuy" default="0" type="internal" text="{1041, 10056}" comment="Max gate distance to gather resources. Gathering range supported if $minsell and $maxsell are provided"/>
+      <param name="minsell" default="0" type="internal" text="{1041, 10069}" comment="Min gate distance to sell resources. Sell range supported if $minsell and $maxsell are provided"/>
+      <param name="maxsell" default="0" type="internal" text="{1041, 10058}" comment="Max gate distance to sell resources. Sell range supported if $minsell and $maxsell are provided"/>
+
+      <param name="duration" default="0s" type="time" infinitevalue="0s" advanced="true" text="{1041, 10034}" comment="Duration">
+        <input_param name="startvalue" value="0s"/>
+        <input_param name="min" value="0s"/>
+        <input_param name="max" value="24h"/>
+        <input_param name="step" value="1min"/>
+      </param>
+      <param name="tradeforbuildstorage" default="null" type="internal" comment="Only used for trade.find.commander. Set to look for trade offers on the connected build storage rather than on the commander."/>
+      <param name="usecover" default="false" type="internal" text="Use Cover" comment="used by smugglers"/>
+      <param name="debugchance" type="bool" default="0" advanced="true" text="{1041, 10086}" comment="Print debug output">
+        <input_param name="truevalue" value="100"/>
+      </param>
+      <param name="debugchance2" type="bool" default="0" advanced="true" text="{1041, 10142}" comment="Verbose debug output">
+        <input_param name="truevalue" value="100"/>
+      </param>
+    </params>
+    <requires>
+      <match shiptype="shiptype.lasertower" negate="true"/>
+      <match class="class.spacesuit" negate="true"/>
+    </requires>
+  </order>
+	</replace>
+</diff>
