@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<diff>
+	<replace sel="/aiscript/init//do_if[@value=&quot;(this.assignedcontrolled.order.id == 'MiningRoutine') or (this.assignedcontrolled.order.id == 'MiningRoutine_Basic') or (this.assignedcontrolled.order.id == 'MiningRoutine_Advanced') or (this.assignedcontrolled.order.id == 'MiningRoutine_Expert')&quot;]">
+		<do_if value="(this.assignedcontrolled.order.id == 'MiningRoutine') or (this.assignedcontrolled.order.id == 'MiningRoutine_Basic') or (this.assignedcontrolled.order.id == 'MiningRoutine_Advanced') or (this.assignedcontrolled.order.id == 'MiningRoutine_Expert') or (this.assignedcontrolled.order.id == 'MiningRoutine_BasicMid') or (this.assignedcontrolled.order.id == 'MiningRoutine_BasicMidStandard') or (this.assignedcontrolled.order.id == 'MiningRoutine_BasicMidStandardAdvanced') or (this.assignedcontrolled.order.id == 'MiningRoutine_BasicMidStandardAdvancedExpert')">
+			<set_value name="$thisorder" exact="this.assignedcontrolled.order"/>
+		</do_if>
+	</replace>
+
+	<replace sel="/aiscript/patch[@sinceversion='7']//do_if[@value=&quot;(this.assignedcontrolled.order.id == 'MiningRoutine') or (this.assignedcontrolled.order.id == 'MiningRoutine_Basic') or (this.assignedcontrolled.order.id == 'MiningRoutine_Advanced') or (this.assignedcontrolled.order.id == 'MiningRoutine_Expert')&quot;]">
+		<do_if value="(this.assignedcontrolled.order.id == 'MiningRoutine') or (this.assignedcontrolled.order.id == 'MiningRoutine_Basic') or (this.assignedcontrolled.order.id == 'MiningRoutine_Advanced') or (this.assignedcontrolled.order.id == 'MiningRoutine_Expert') or (this.assignedcontrolled.order.id == 'MiningRoutine_BasicMid') or (this.assignedcontrolled.order.id == 'MiningRoutine_BasicMidStandard') or (this.assignedcontrolled.order.id == 'MiningRoutine_BasicMidStandardAdvanced') or (this.assignedcontrolled.order.id == 'MiningRoutine_BasicMidStandardAdvancedExpert')">
+			<set_value name="$thisorder" exact="this.assignedcontrolled.order"/>
+		</do_if>
+	</replace>
+
+
+	<replace sel="/aiscript/attention//do_if[@value=&quot;(this.assignedcontrolled.order.id == 'MiningRoutine') or (this.assignedcontrolled.order.id == 'MiningRoutine_Basic') or (this.assignedcontrolled.order.id == 'MiningRoutine_Advanced') or (this.assignedcontrolled.order.id == 'MiningRoutine_Expert')&quot;]">
+		<do_if value="(this.assignedcontrolled.order.id == 'MiningRoutine') or (this.assignedcontrolled.order.id == 'MiningRoutine_Basic') or (this.assignedcontrolled.order.id == 'MiningRoutine_Advanced') or (this.assignedcontrolled.order.id == 'MiningRoutine_Expert') or (this.assignedcontrolled.order.id == 'MiningRoutine_BasicMid') or (this.assignedcontrolled.order.id == 'MiningRoutine_BasicMidStandard') or (this.assignedcontrolled.order.id == 'MiningRoutine_BasicMidStandardAdvanced') or (this.assignedcontrolled.order.id == 'MiningRoutine_BasicMidStandardAdvancedExpert')">
+			<set_order_syncpoint_reached order="this.assignedcontrolled.order"/>
+		</do_if>
+	</replace>
+</diff>
