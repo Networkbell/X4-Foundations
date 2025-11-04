@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<diff>
+	<replace sel="/aiscript/init//set_value[@name='$blockingorders']">
+		<set_value name="$blockingorders" exact="['Wait', 'Escort', 'TradeRoutine', 'TradeRoutine_Basic', 'TradeRoutine_Advanced', 'TradeRoutine_BasicMid', 'TradeRoutine_BasicMidStandard', 'TradeRoutine_BasicMidStandardAdvanced', 'TradeRoutine_BasicMidStandardAdvancedExpert', 'Middleman', 'MiningRoutine', 'MiningRoutine_Basic', 'MiningRoutine_Advanced', 'MiningRoutine_Expert', 'MiningRoutine_BasicMid', 'MiningRoutine_BasicMidStandard', 'MiningRoutine_BasicMidStandardAdvanced', 'MiningRoutine_BasicMidStandardAdvancedExpert']"/>
+	</replace>
+
+	<replace sel="/aiscript/patch[@sinceversion='5']//set_value[@name='$blockingorders']">
+		<set_value name="$blockingorders" exact="['Wait', 'Escort', 'TradeRoutine', 'TradeRoutine_Basic', 'TradeRoutine_Advanced', 'TradeRoutine_BasicMid', 'TradeRoutine_BasicMidStandard', 'TradeRoutine_BasicMidStandardAdvanced', 'TradeRoutine_BasicMidStandardAdvancedExpert', 'Middleman', 'MiningRoutine', 'MiningRoutine_Basic', 'MiningRoutine_Advanced', 'MiningRoutine_Expert', 'MiningRoutine_BasicMid', 'MiningRoutine_BasicMidStandard', 'MiningRoutine_BasicMidStandardAdvanced', 'MiningRoutine_BasicMidStandardAdvancedExpert']"/>
+	</replace>
+</diff>

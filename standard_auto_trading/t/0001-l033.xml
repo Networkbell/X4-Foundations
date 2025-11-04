@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+<add sel="/language">
+	<page id="1819190165" voice="no">
+		<t id="1">Commerce standard auto</t>
+		<t id="2">Vous permet d'échanger en achetant et en vendant plusieurs ressources dans un rayon de 1 à 4 secteurs, selon vos compétences de pilotage ou de gestion. Si vous sélectionnez plus de marchandises que ce qui est autorisé, seules les premières seront utilisées.</t>
+		<t id="3">Marchandises max</t>
+	</page>
+</add>
+</diff>

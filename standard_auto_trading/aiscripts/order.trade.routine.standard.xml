@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<aiscript name="order.trade.routine.standard" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd">
+	<order id="TradeRoutine_BasicMidStandard" name="{1819190165, 1}" description="{1819190165, 2}" category="trade" allowinloop="false">
+		<params>
+
+			<param name="maxwares" default="([@this.ship.commander.tradenpc.skill.management, @this.ship.pilot.skill.piloting].max / 3) * 2" type="number" text="{1819190165, 3}" comment="Maximum number of selectable wares.">
+				<input_param name="min" value="1"/>
+				<input_param name="max" value="([@this.ship.commander.tradenpc.skill.management, @this.ship.pilot.skill.piloting].max / 3) * 2"/>
+				<input_param name="step" value="1"/>
+			</param>
+			
+			<param name="warebasket" required="true" default="this.ship.warebasket.list" type="list" text="{1041, 10146}" comment="Wares. List of resources that we will supply.">
+				<input_param name="type" value="'ware'"/>
+				<input_param name="cancarry" value="this.ship"/>
+			</param>
+
+
+			
+			<param name="range" default="if @this.ship.commanderentity.$config_subordinate_range then @this.ship.commanderentity.$config_subordinate_range 
+             else (if @this.ship.commander.isclass.[class.station, class.buildstorage] then this.ship.commander.sector else (if this.ship.jobmainsector then this.ship.jobmainsector else this.sector))" type="sector" text="{1041, 10005}" comment="Anchor space"/>
+			<param name="minbuy" default="0" type="internal" text="{1041, 10067}" comment="Min gate distance to gather resources. Gathering range supported if $minsell and $maxsell are provided"/>
+			<param name="maxbuy" default="[(([@this.ship.commander.tradenpc.skill.management, @this.ship.pilot.skill.piloting].max / 3) - 1), 0].max" type="number" text="{1041, 10054}" comment="Max gate distance to buy. Gathering range supported if $minsell and $maxsell are provided">
+				<input_param name="startvalue" value="0"/>
+				<input_param name="min" value="0"/>
+				<input_param name="max" value="[(([@this.ship.commander.tradenpc.skill.management, @this.ship.pilot.skill.piloting].max / 3) - 1), 0].max"/>
+				<input_param name="step" value="1"/>
+			</param>
+			<param name="minsell" default="0" type="internal" text="{1041, 10069}" comment="Min gate distance to sell resources. Sell range supported if $minsell and $maxsell are provided"/>
+			<param name="maxsell" default="[(([@this.ship.commander.tradenpc.skill.management, @this.ship.pilot.skill.piloting].max / 3) - 1), 0].max" type="number" text="{1041, 10058}" comment="Max gate distance to sell resources. Sell range supported if $minsell and $maxsell are provided">
+				<input_param name="startvalue" value="0"/>
+				<input_param name="min" value="0"/>
+				<input_param name="max" value="[(([@this.ship.commander.tradenpc.skill.management, @this.ship.pilot.skill.piloting].max / 3) - 1), 0].max"/>
+				<input_param name="step" value="1"/>
+			</param>
+
+			<param name="duration" default="0s" type="time" infinitevalue="0s" advanced="true" text="{1041, 10034}" comment="Duration">
+				<input_param name="startvalue" value="0s"/>
+				<input_param name="min" value="0s"/>
+				<input_param name="max" value="24h"/>
+				<input_param name="step" value="1min"/>
+			</param>
+			<param name="tradeforbuildstorage" default="null" type="internal" comment="Only used for trade.find.commander. Set to look for trade offers on the connected build storage rather than on the commander."/>
+			<param name="usecover" default="false" type="internal" text="Use Cover" comment="used by smugglers"/>
+			<param name="debugchance" type="bool" default="0" advanced="true" text="{1041, 10086}" comment="Print debug output">
+				<input_param name="truevalue" value="100"/>				
+			</param>
+			<param name="debugchance2" type="bool" default="0" advanced="true" text="{1041, 10142}" comment="Verbose debug output">
+				<input_param name="truevalue" value="100"/>
+			</param>
+		</params>
+		<skill min="40"/>
+		<requires>
+			<match shiptype="shiptype.lasertower" negate="true"/>
+			<match class="class.spacesuit" negate="true"/>
+		</requires>
+	</order>
+	<attention min="unknown">
+		<actions>
+
+			<do_if value="$maxwares and $maxwares gt 0">
+				<set_value name="$maxcalc" exact="$maxwares"/>
+			</do_if>
+			<do_else>
+				<set_value name="$maxcalc" exact="[@this.ship.commander.tradenpc.skill.management, @this.ship.pilot.skill.piloting].max / 3"/>
+			</do_else>
+
+			<set_value name="$keep" exact="($maxcalc)i"/>
+			<set_value name="$keep" exact="[$keep, 1].max"/>
+			<set_value name="$keep" exact="[$keep, $warebasket.count].min"/>
+
+			<do_if value="$keep gt 0 and $warebasket.count gt 0">
+				<set_value name="$limitedwarebasket" exact="[]"/>
+				<do_all exact="$keep" counter="$i">
+					<append_to_list name="$limitedwarebasket" exact="$warebasket.{$i}"/>
+				</do_all>
+
+				<set_value name="$warebasket" exact="$limitedwarebasket"/>
+
+				<remove_value name="$limitedwarebasket"/>
+			</do_if>
+			
+			<remove_value name="$maxcalc"/>
+			<remove_value name="$keep"/>
+
+			<do_if value="$debugchance or $debugchance2">
+				<do_if value="$warebasket.count">
+					<set_value name="$ws" exact="''"/>
+					<do_all exact="$warebasket.count" counter="$i">
+						<do_if value="@$warebasket.{$i}.knownname">
+							<set_value name="$itemname" exact="$warebasket.{$i}.knownname"/>
+						</do_if>
+						<do_else>
+							<set_value name="$itemname" exact="$warebasket.{$i}"/>
+						</do_else>
+
+						<do_if value="$ws != ''">
+							<set_value name="$ws" exact="$ws + ', ' + $itemname"/>
+						</do_if>
+						<do_else>
+							<set_value name="$ws" exact="$itemname"/>
+						</do_else>
+						<remove_value name="$itemname"/>
+					</do_all>
+					<debug_text text="'Used wares: %1'.[$ws]" filter="error"/>
+					<remove_value name="$ws"/>
+				</do_if>
+				<do_else>
+					<debug_text text="'Used wares: none'" filter="error"/>
+				</do_else>
+			</do_if>
+
+			<run_script name="'order.trade.routine'">
+				<param name="warebasket" value="$warebasket"/>
+				<param name="range" value="$range"/>
+				<param name="minbuy" value="$minbuy"/>
+				<param name="maxbuy" value="$maxbuy"/>
+				<param name="minsell" value="$minsell"/>
+				<param name="maxsell" value="$maxsell"/>
+				<param name="duration" value="$duration"/>
+				<param name="tradeforbuildstorage" value="$tradeforbuildstorage"/>
+				<param name="usecover" value="$usecover"/>
+				<param name="debugchance" value="$debugchance"/>
+				<param name="debugchance2" value="$debugchance2"/>
+			</run_script>
+
+			<!-- ensure commander order object contains the computed warebasket so Assist can copy it -->
+			<do_if value="this.assignedcontrolled.defaultorder.exists">
+				<edit_order_param order="this.assignedcontrolled.defaultorder" param="'warebasket'" value="$warebasket"/>
+			</do_if>
+						
+		</actions>
+	</attention>
+</aiscript>
