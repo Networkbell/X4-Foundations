@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<language>
+	<page id="1819190171" voice="no">
+		<t id="1">Scan known stations</t>
+		<t id="2">Revisit and scan the stations already known in a given area to update the commercial offers and station modules.</t>
+		<t id="3">Docking at stations</t>
+		<t id="4">Notifications</t>
+		<t id="5">%1 has finished scanning %2</t>
+		<t id="6">Scan the stations: </t>
+		<t id="7">\033C%1\033X has finished scanning \033C%2\033X</t>	
+		</page>
+</language>
+
+

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+<add sel="/language">
+	<page id="1819190171" voice="no">
+		<t id="1">Scannez les stations connues</t>
+		<t id="2">Revisitez et scannez les stations déjà connues dans un secteur donné afin de mettre à jour les offres commerciales et les modules de la station.</t>
+		<t id="3">Amarrage aux stations</t>
+		<t id="4">Notifications</t>
+		<t id="5">%1 a terminé de scanner %2</t>
+		<t id="6">Scanner les stations : </t>
+		<t id="7">\033C%1\033X a terminé de scanner \033C%2\033X</t>		
+	</page>
+</add>
+</diff>

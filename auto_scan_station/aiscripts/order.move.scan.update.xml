@@ -1,0 +1,194 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<aiscript name="order.move.scan.update" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="19">
+	<order id="AutoScanStationsUpdate" name="{1819190171, 1}" description="{1819190171, 2}" category="trade">
+		<params>
+			<param name="targetspace" type="internal" default="null" text="{1041, 10126}" comment="Target. Space to scout. Only accessible via interact menu and cannot be changed via UI outside of initial setup.">
+				<input_param name="class" value="[class.sector, class.gate, class.highwayentrygate]"/>
+			</param>
+			<param name="destination" type="position" text="{1041, 10117}" default="null" comment="Space. Position to start from.">
+				<input_param name="class" value="class.sector"/>
+			</param>
+			<param name="radius" type="length" default="350km" text="{1041, 10093}" comment="Radius">
+				<input_param name="min" value="0m"/>
+				<input_param name="max" value="350km"/>
+				<input_param name="step" value="1km"/>
+			</param>
+			<param name="timeout" type="time" default="0s" infinitevalue="-1s" advanced="true" text="{1041, 10034}" comment="Duration. timeout -1s interpreted as infinite. timeout 0s interpreted as finish after one cycle.">
+				<input_param name="min" value="0s"/>
+				<input_param name="max" value="24h"/>
+				<input_param name="step" value="10min"/>
+			</param>
+			<param name="debugchance" type="bool" default="0" advanced="true" text="{1041, 10086}" comment="Print debug output">
+				<input_param name="truevalue" value="100"/>
+			</param>
+			<param name="visitstations" type="bool" default="false" text="{1819190171, 3}" comment="Si true, créer des ordres DockAndWait pour les stations découvertes."/>
+			<param name="endnotify" default="true" type="bool" text="{1819190171, 4}"/>
+			<param name="maxmovetime" type="time" default="120s" advanced="true" text="Max move time (s)"/>
+		</params>
+		<skill min="40"/>
+		<requires>
+			<match shiptype="shiptype.lasertower" negate="true"/>
+			<match class="class.spacesuit" negate="true"/>
+		</requires>
+		<location object="$destination.{1}" position="$destination.{2}" radius="$radius" condition="@$destination.{1}.isclass.sector"/>
+	</order>
+
+	<interrupts>
+		<handler ref="SectorChangeHandler"/>
+		<handler ref="TargetInvalidHandler"/>
+		<handler ref="AttackHandler"/>
+		<handler ref="MissileLockHandler"/>
+		<handler ref="ScannedHandler"/>
+		<handler ref="InspectedHandler"/>
+		<handler ref="ResupplyHandler"/>
+		<handler ref="TideHandler"/>
+	</interrupts>
+
+	<!-- Harmonization targetspace <-> destination -->
+	<patch sinceversion="5">
+		<set_value name="$loctargetspace" exact="$targetspace"/>
+		<do_if value="@$targetspace and not $targetspace.isclass.sector">
+			<do_if value="$targetspace.isclass.gate and $targetspace.destination">
+				<set_value name="$loctargetspace" exact="$targetspace.destination.sector"/>
+			</do_if>
+			<do_elseif value="$targetspace.isclass.highwayentrygate and $targetspace.highway.destination">
+				<set_value name="$loctargetspace" exact="$targetspace.highway.destination.sector"/>
+			</do_elseif>
+			<do_elseif value="$targetspace.isclass.highway and $targetspace.issuperhighway and $targetspace.destination">
+				<set_value name="$loctargetspace" exact="$targetspace.destination.sector"/>
+			</do_elseif>
+			<do_else>
+				<debug_text text="'invalid targetspace: %s %s %s'.[$targetspace.class, $targetspace.knownname, $targetspace]" filter="error"/>
+			</do_else>
+		</do_if>
+		<do_if value="@$destination.{1} and $loctargetspace and $destination.{1} != $loctargetspace">
+			<debug_text text="'PATCH: mismatch between destination: %s %s and targetspace: %s %s. correcting targetspace to match destination.'.[$destination.{1}.class, $destination.{1}.knownname, $loctargetspace.class, $loctargetspace.knownname]" filter="savegame"/>
+			<set_value name="$targetspace" exact="$destination.{1}"/>
+			<edit_order_param order="this.assignedcontrolled.order" param="'targetspace'" value="$targetspace"/>
+		</do_if>
+	</patch>
+
+	<attention min="unknown">
+		<actions>
+
+			<!-- 1) Deduce targetspace if missing -->
+			<do_if value="not @$targetspace">
+				<debug_text text="'no targetspace defined. deriving targetspace from current context.'" chance="$debugchance"/>
+				<do_if value="this.sector">
+					<set_value name="$targetspace" exact="this.sector"/>
+				</do_if>
+				<do_else>
+					<do_if value="this.zone.issuperhighway and this.zone.destination.sector">
+						<set_value name="$targetspace" exact="this.zone.destination.sector"/>
+					</do_if>
+					<do_else>
+						<debug_text text="'%s %s %s is neither in a sector nor in a superhighway. zone: %s %s. aborting.'.[this.assignedcontrolled.idcode, this.assignedcontrolled.knownname, this.assignedcontrolled, this.zone.knownname, this.zone]" filter="error"/>
+						<resume label="cleanup"/>
+					</do_else>
+				</do_else>
+				<do_if value="@$targetspace">
+					<debug_text text="'targetspace defined: %s %s %s'.[$targetspace.class, $targetspace.knownname, $targetspace]" chance="$debugchance"/>
+					<edit_order_param order="this.assignedcontrolled.order" param="'targetspace'" value="$targetspace" comment="will cause script to restart"/>
+				</do_if>
+			</do_if>
+
+			<!-- 2) Define default destination (scancenter) if absent -->
+			<do_if value="@$targetspace and not @$destination.{1}">
+				<debug_text text="'no destination defined. deriving destination from targetspace.'" chance="$debugchance"/>
+				<do_if value="$targetspace.isclass.sector">
+					<set_value name="$destination" exact="[$targetspace, $targetspace.coreposition]"/>
+				</do_if>
+				<do_elseif value="$targetspace.isclass.gate and $targetspace.destination">
+					<set_value name="$destination" exact="[$targetspace.destination.sector, $targetspace.destination.sector.coreposition]"/>
+				</do_elseif>
+				<do_elseif value="$targetspace.isclass.highwayentrygate and $targetspace.highway.destination">
+					<set_value name="$destination" exact="[$targetspace.highway.destination.sector, $targetspace.highway.destination.sector.coreposition]"/>
+				</do_elseif>
+				<do_elseif value="$targetspace.isclass.highway and $targetspace.issuperhighway and $targetspace.destination">
+					<set_value name="$destination" exact="[$targetspace.destination.sector, $targetspace.destination.sector.coreposition]"/>
+				</do_elseif>
+				<do_else>
+					<debug_text text="'invalid targetspace: %s %s %s. attempting to recover.'.[$targetspace.class, $targetspace.knownname, $targetspace]" filter="error"/>
+					<edit_order_param order="this.assignedcontrolled.order" param="'targetspace'" value="null" comment="will cause script to restart"/>
+				</do_else>
+
+				<do_if value="@$destination.{1}">
+					<!-- Default radius: half of the core sector -->
+					<set_value name="$radius" exact="$destination.{1}.coresize / 2m"/>
+					<debug_text text="'destination defined: %s %s %s. radius: %sm'.[$destination.{1}.class, $destination.{1}.knownname, $destination, $radius]" chance="$debugchance"/>
+					<!-- NB: 'destination' is not a parameter of the main command; used here as scancenter -->
+					<edit_order_param order="this.assignedcontrolled.order" param="'radius'" value="$radius" comment="will cause script to restart"/>
+				</do_if>
+			</do_if>
+
+			<!-- 3) Normalize targetspace (gates/highways/zones -> sector) -->
+			<set_value name="$loctargetspace" exact="$targetspace"/>
+			<do_if value="@$targetspace and not $targetspace.isclass.sector">
+				<do_if value="$targetspace.isclass.gate and $targetspace.destination">
+					<set_value name="$loctargetspace" exact="$targetspace.destination.sector"/>
+				</do_if>
+				<do_elseif value="$targetspace.isclass.highwayentrygate and $targetspace.highway.destination">
+					<set_value name="$loctargetspace" exact="$targetspace.highway.destination.sector"/>
+				</do_elseif>
+				<do_elseif value="$targetspace.isclass.highway and $targetspace.issuperhighway and $targetspace.destination">
+					<set_value name="$loctargetspace" exact="$targetspace.destination.sector"/>
+				</do_elseif>
+				<do_else>
+					<debug_text text="'invalid targetspace: %s %s %s. aborting.'.[$targetspace.class, $targetspace.knownname, $targetspace]" filter="error"/>
+					<resume label="cleanup"/>
+				</do_else>
+			</do_if>
+			<debug_text text="'destination: %s %s %s, targetspace: %s %s %s'.[@$destination.{1}.class, @$destination.{1}.knownname, $destination.{1}, @$loctargetspace.class, @$loctargetspace.knownname, $loctargetspace]" chance="$debugchance"/>
+			<do_if value="@$destination.{1} and $loctargetspace and $destination.{1} != $loctargetspace">
+				<debug_text text="'mismatch between destination: %s %s and targetspace: %s %s. normal on edit. updating targetspace to match destination.'.[$destination.{1}.class, $destination.{1}.knownname, $loctargetspace.class, $loctargetspace.knownname]" chance="$debugchance"/>
+				<set_value name="$targetspace" exact="$destination.{1}"/>
+				<edit_order_param order="this.assignedcontrolled.order" param="'targetspace'" value="$targetspace"/>
+			</do_if>
+			<remove_value name="$loctargetspace"/>
+
+			<wait exact="1s" sinceversion="2"/>
+
+			<!-- 4) Check for valid destination -->
+			<do_if value="$destination and not @$destination.{1}.isclass.sector">
+				<debug_text text="'destination provided, but it is not relative to a sector. destination.{1}: %s %s %s, destination.{2}: %s. aborting.'.[@$destination.{1}.class, @$destination.{1}.knownname, @$destination.{1}, @$destination.{2}]" filter="error"/>
+				<set_value name="$destination" exact="null"/>
+				<resume label="cleanup"/>
+			</do_if>
+
+			<label name="start"/>
+
+			<!-- 5) Move to the starting point if necessary -->
+			<do_if value="$destination and (this.sector != $destination.{1} or @this.ship.bboxdistanceto.{$destination} gt 10km)">
+				<set_command command="command.movetozone" param="$destination.{1}"/>
+				<run_script name="'move.generic'" result="$movesuccess">
+					<param name="destination" value="$destination.{1}"/>
+					<param name="position" value="$destination.{2}"/>
+					<param name="debugchance" value="$debugchance"/>
+				</run_script>
+				<do_if value="not $movesuccess">
+					<do_if value="@this.assignedcontrolled.order.isrunning">
+						<set_order_failed order="this.assignedcontrolled.order" text="{1045, 101}" comment="Unable to reach destination."/>
+					</do_if>
+					<debug_text text="'Unable to reach destination. Aborting.'" chance="$debugchance"/>
+					<resume label="cleanup"/>
+				</do_if>
+			</do_if>
+
+			<!-- 6) Start the main process (ship auto scan) -->
+			<run_script name="'order.move.scan'">
+				<param name="targetspace" value="$targetspace"/>
+				<param name="radius" value="$radius"/>
+				<param name="scancenter" value="$destination"/>
+				<param name="timeout" value="$timeout"/>
+				<param name="exploreupdate" value="true"/>
+				<param name="visitstations" value="$visitstations"/>
+				<param name="endnotify" value="$endnotify"/>
+				<param name="maxmovetime" value="$maxmovetime"/>
+				<param name="debugchance" value="$debugchance"/>
+			</run_script>
+
+			<label name="cleanup"/>
+
+		</actions>
+	</attention>
+</aiscript>
