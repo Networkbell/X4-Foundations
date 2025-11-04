@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<content 	id="auto_scan_station" 
+			name="Station AutoScan"     
+			description="Revisit and scan the stations already known in a given area to update the commercial offers and station modules."			
+			author="DamonYa"
+			version="101"
+			date="2025-11-04"
+			save="false"
+			enabled="1">
+		 
+<text language=""
+description="Revisit and scan the stations already known in a given area to update the commercial offers and station modules."
+/>
+</content>

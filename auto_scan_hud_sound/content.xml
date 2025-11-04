@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<content 	id="auto_scan_hud_sound" 
+			name="AutoScan Hud Sound"     
+			description="Disables sounds and the HUD during a scan."			
+			author="DamonYa"
+			version="100"
+			date="2025-10-26"
+			save="false"
+			enabled="1">
+		 
+<text language=""
+description="Disables sounds and the HUD during a scan."
+/>
+</content>
