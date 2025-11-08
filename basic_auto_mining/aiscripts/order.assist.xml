@@ -2,7 +2,7 @@
 <diff>
 
 	<replace sel="/aiscript/attention//do_elseif[@value=&quot;($orderdef.$id == 'TradeRoutine') or ($orderdef.$id == 'TradeRoutine_Basic') or ($orderdef.$id == 'TradeRoutine_Advanced')&quot;]">
-		<do_elseif value="($orderdef.$id == 'TradeRoutine') or ($orderdef.$id == 'TradeRoutine_Basic') or ($orderdef.$id == 'TradeRoutine_Advanced') or ($orderdef.$id == 'TradeRoutine_BasicMid') or ($orderdef.$id == 'TradeRoutine_BasicMidStandard') or ($orderdef.$id == 'TradeRoutine_BasicMidStandardAdvanced') or ($orderdef.$id == 'TradeRoutine_BasicMidStandardAdvancedExpert')">
+		<do_elseif value="($orderdef.$id == 'TradeRoutine') or ($orderdef.$id == 'TradeRoutine_Basic') or ($orderdef.$id == 'TradeRoutine_Advanced') or ($orderdef.$id == 'TradeRoutine_BasicMid') or ($orderdef.$id == 'TradeRoutine_Standard') or ($orderdef.$id == 'TradeRoutine_Expert')">
 			<do_if value="$createdefaultorder? or (not $incompatiblewaretransport?)">
 				<set_value name="$added"/>
 				<do_if value="@this.assignedcontrolled.order.isrunning">
@@ -20,6 +20,9 @@
 							<param name="tradeforbuildstorage" value="$orderdef.$tradeforbuildstorage"/>
 							<param name="usecover" value="$orderdef.$usecover"/>
 							<param name="warebasket_override" value="$orderdef.$warebasket_override"/>
+							<do_if value="$orderdef.$id == 'TradeRoutine_Standard'">
+								<param name="maxwares" value="$orderdef.$maxwares"/>
+							</do_if>
 						</create_order>
 					</do_if>
 					<do_else>
@@ -32,6 +35,9 @@
 						<set_value name="$orderdef.$tradeforbuildstorage" exact="$order.$tradeforbuildstorage"/>
 						<set_value name="$orderdef.$usecover" exact="$order.$usecover"/>
 						<set_value name="$orderdef.$warebasket_override" exact="$order.$warebasket_override"/>
+						<do_if value="$orderdef.$id == 'TradeRoutine_Standard'">
+							<set_value name="$orderdef.$maxwares" exact="$order.$maxwares"/>
+						</do_if>
 						<run_script name="$scriptname" sinceversion="2">
 							<param name="warebasket" value="$order.$warebasket"/>
 							<param name="range" value="$order.$range"/>
@@ -42,6 +48,9 @@
 							<param name="tradeforbuildstorage" value="$order.$tradeforbuildstorage"/>
 							<param name="usecover" value="$order.$usecover"/>
 							<param name="warebasket_override" value="$order.$warebasket_override"/>
+							<do_if value="$orderdef.$id == 'TradeRoutine_Standard'">
+								<param name="maxwares" value="$order.$maxwares"/>
+							</do_if>
 						</run_script>
 					</do_else>
 				</do_if>
@@ -56,6 +65,9 @@
 							<param name="maxsell" value="$orderdef.$maxsell"/>
 							<param name="tradeforbuildstorage" value="$orderdef.$tradeforbuildstorage"/>
 							<param name="usecover" value="$orderdef.$usecover"/>
+							<do_if value="$orderdef.$id == 'TradeRoutine_Standard'">
+								<param name="maxwares" value="$orderdef.$maxwares"/>
+							</do_if>
 						</create_order>
 					</do_if>
 					<do_else>
@@ -67,6 +79,9 @@
 						<set_value name="$orderdef.$maxsell" exact="$order.$maxsell"/>
 						<set_value name="$orderdef.$tradeforbuildstorage" exact="$order.$tradeforbuildstorage"/>
 						<set_value name="$orderdef.$usecover" exact="$order.$usecover"/>
+						<do_if value="$orderdef.$id == 'TradeRoutine_Standard'">
+							<set_value name="$orderdef.$maxwares" exact="$order.$maxwares"/>
+						</do_if>
 						<run_script name="$scriptname">
 							<param name="warebasket" value="$order.$warebasket"/>
 							<param name="range" value="$order.$range"/>
@@ -76,6 +91,9 @@
 							<param name="maxsell" value="$order.$maxsell"/>
 							<param name="tradeforbuildstorage" value="$order.$tradeforbuildstorage"/>
 							<param name="usecover" value="$order.$usecover"/>
+							<do_if value="$orderdef.$id == 'TradeRoutine_Standard'">
+								<param name="maxwares" value="$order.$maxwares"/>
+							</do_if>
 						</run_script>
 					</do_else>
 				</do_else>
@@ -86,7 +104,7 @@
 	
 	
 	<replace sel="/aiscript/attention//do_elseif[@value=&quot;($orderdef.$id == 'MiningRoutine') or ($orderdef.$id == 'MiningRoutine_Advanced') or ($orderdef.$id == 'MiningRoutine_Basic') or ($orderdef.$id == 'MiningRoutine_Expert')&quot;]">
-		<do_elseif value="($orderdef.$id == 'MiningRoutine') or ($orderdef.$id == 'MiningRoutine_Advanced') or ($orderdef.$id == 'MiningRoutine_Basic') or ($orderdef.$id == 'MiningRoutine_Expert') or ($orderdef.$id == 'MiningRoutine_BasicMid') or ($orderdef.$id == 'MiningRoutine_BasicMidStandard') or ($orderdef.$id == 'MiningRoutine_BasicMidStandardAdvanced') or ($orderdef.$id == 'MiningRoutine_BasicMidStandardAdvancedExpert')">
+		<do_elseif value="($orderdef.$id == 'MiningRoutine') or ($orderdef.$id == 'MiningRoutine_Advanced') or ($orderdef.$id == 'MiningRoutine_Basic') or ($orderdef.$id == 'MiningRoutine_Expert') or ($orderdef.$id == 'MiningRoutine_BasicMid') or ($orderdef.$id == 'MiningRoutine_Standard')">
 			<do_if value="(this.assignedcontrolled.primarypurpose == purpose.mine) and ($createdefaultorder? or (not $incompatiblewaretransport?) or ($commander.waretransport.indexof.{waretransport.solid} and this.assignedcontrolled.waretransport.indexof.{waretransport.solid}) or ($commander.waretransport.indexof.{waretransport.liquid} and this.assignedcontrolled.waretransport.indexof.{waretransport.liquid}))">
 				<set_value name="$added"/>
 				<do_if value="@this.assignedcontrolled.order.isrunning">
@@ -102,6 +120,9 @@
 							<param name="minsell" value="$orderdef.$minsell"/>
 							<param name="maxsell" value="$orderdef.$maxsell"/>
 							<param name="warebasket_override" value="$orderdef.$warebasket_override"/>
+							<do_if value="$orderdef.$id == 'MiningRoutine_Standard'">
+								<param name="maxwares" value="$orderdef.$maxwares"/>
+							</do_if>
 						</create_order>
 					</do_if>
 					<do_else>
@@ -112,6 +133,9 @@
 						<set_value name="$orderdef.$minsell" exact="$order.$minsell"/>
 						<set_value name="$orderdef.$maxsell" exact="$order.$maxsell"/>
 						<set_value name="$orderdef.$warebasket_override" exact="$order.$warebasket_override"/>
+						<do_if value="$orderdef.$id == 'MiningRoutine_Standard'">
+							<set_value name="$orderdef.$maxwares" exact="$order.$maxwares"/>
+						</do_if>
 						<run_script name="$scriptname" sinceversion="2">
 							<param name="warebasket" value="$order.$warebasket"/>
 							<param name="range" value="$order.$range"/>
@@ -120,6 +144,9 @@
 							<param name="minsell" value="$order.$minsell"/>
 							<param name="maxsell" value="$order.$maxsell"/>
 							<param name="warebasket_override" value="$order.$warebasket_override"/>
+							<do_if value="$orderdef.$id == 'MiningRoutine_Standard'">
+								<param name="maxwares" value="$order.$maxwares"/>
+							</do_if>
 						</run_script>
 					</do_else>
 				</do_if>
@@ -132,6 +159,9 @@
 							<param name="maxbuy" value="$orderdef.$maxbuy"/>
 							<param name="minsell" value="$orderdef.$minsell"/>
 							<param name="maxsell" value="$orderdef.$maxsell"/>
+							<do_if value="$orderdef.$id == 'MiningRoutine_Standard'">
+								<param name="maxwares" value="$orderdef.$maxwares"/>
+							</do_if>
 						</create_order>
 					</do_if>
 					<do_else>
@@ -141,6 +171,9 @@
 						<set_value name="$orderdef.$maxbuy" exact="$order.$maxbuy"/>
 						<set_value name="$orderdef.$minsell" exact="$order.$minsell"/>
 						<set_value name="$orderdef.$maxsell" exact="$order.$maxsell"/>
+						<do_if value="$orderdef.$id == 'MiningRoutine_Standard'">
+							<set_value name="$orderdef.$maxwares" exact="$order.$maxwares"/>
+						</do_if>
 						<run_script name="$scriptname">
 							<param name="warebasket" value="$order.$warebasket"/>
 							<param name="range" value="$order.$range"/>
@@ -148,6 +181,9 @@
 							<param name="maxbuy" value="$order.$maxbuy"/>
 							<param name="minsell" value="$order.$minsell"/>
 							<param name="maxsell" value="$order.$maxsell"/>
+							<do_if value="$orderdef.$id == 'MiningRoutine_Standard'">
+								<param name="maxwares" value="$order.$maxwares"/>
+							</do_if>
 						</run_script>
 					</do_else>
 				</do_else>

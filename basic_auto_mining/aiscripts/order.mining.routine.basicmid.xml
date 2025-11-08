@@ -30,10 +30,10 @@
 				<input_param name="step" value="1min"/>
 				<patch value="0s" sinceversion="1"/>
 			</param>
-			<param name="debugchance" type="bool" default="100" advanced="true" text="{1041, 10086}" comment="Print debug output">
+			<param name="debugchance" type="bool" default="0" advanced="true" text="{1041, 10086}" comment="Print debug output">
 				<input_param name="truevalue" value="100"/>
 			</param>
-			<param name="debugchance2" type="bool" default="100" advanced="true" text="{1041, 10142}" comment="Verbose debug output">
+			<param name="debugchance2" type="bool" default="0" advanced="true" text="{1041, 10142}" comment="Verbose debug output">
 				<input_param name="truevalue" value="100"/>
 			</param>
 		</params>

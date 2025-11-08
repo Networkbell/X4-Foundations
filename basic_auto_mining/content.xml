@@ -3,8 +3,8 @@
          name="Basic AutoMine"
          description="Adds an intermediate mining skill between basic local mining and advanced mining."
          author="DamonYa"
-         version="111"
-         date="2025-10-22"
+         version="130"
+         date="2025-11-07"
          save="false"
          enabled="1">
 		 
