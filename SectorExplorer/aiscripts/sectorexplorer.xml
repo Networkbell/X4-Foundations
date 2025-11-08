@@ -97,8 +97,6 @@
 
 			<do_if value="$fs_continue">
 
-				<!--set_value name="$message" exact="'%1 is scanning:'.[$ship.name]"/-->
-
 				<set_value name="$fs_range" exact="0"/>
 				<do_while value="$fs_range lt 30">
 					<find_sector_in_range name="$fs_targets" object="$ship" mindistance="$fs_range" maxdistance="$fs_range" multiple="true"/>
@@ -111,10 +109,6 @@
 							</do_if>
 						</do_all>
 						<remove_value name="$candidate"/>
-					</do_if>
-
-					<do_if value="$fs_targets.count == 0">
-						<resume label="explorer_objects"/>
 					</do_if>
 
 					<do_if value="$fs_targets.count">
@@ -166,7 +160,7 @@
 								</do_if>
 
 								<do_if value="$allow">
-									<do_if value="$fs_unique">										
+									<do_if value="$fs_unique">
 										<do_if value="not global.$fs_explored_sectors.{$fs_target}?">
 											<set_value name="global.$fs_explored_sectors.{$fs_target}" exact="table[]"/>
 											<set_value name="global.$fs_explored_sectors.{$fs_target}.{1}" exact="0km"/>
@@ -283,6 +277,11 @@
 			</do_if>
 
 			<do_if value="$fs_skiphexagon">
+				<resume label="start"/>
+			</do_if>
+
+			<do_if value="@global.$fs_explored_sectors.{$sector}.{1} ge $fs_radius">
+				<set_command_action commandaction="commandaction.standingby"/>
 				<resume label="start"/>
 			</do_if>
 
@@ -479,7 +478,6 @@
 			<do_if value="$fs_stage == 7">
 				<set_value name="$fs_stage" exact="0"/>
 
-				<!-- Incrément avec clamp pour ne pas dépasser le rayon cible -->
 				<set_value name="$next_range" exact="$fs_range + $fs_delta"/>
 				<do_if value="$next_range gt $fs_radius">
 					<set_value name="$fs_range" exact="$fs_radius"/>
@@ -540,7 +538,6 @@
 	</attention>
 	<on_abort>
 		<do_if value="$pilot_fs_probe?">
-			<!--debug_to_file directory="'fs_exp'" name="'debug'" text="'%s: %s cleanup %s'.[player.age, $ship.knownname, $pilot_fs_probe]" output="false" append="true"/-->
 			<destroy_object object="$pilot_fs_probe" explosion="false" />
 			<remove_value name="$ship.pilot.fs_exp_probe"/>
 			<set_value name="$pilot_fs_probe" exact="null"/>
