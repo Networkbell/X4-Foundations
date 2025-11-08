@@ -3,12 +3,13 @@
          name="Expert AutoTrade"
          description="Adds an expert trading skill after Advanced AutoTrade like Expert AutoMine"
          author="DamonYa"
-         version="110"
-         date="2025-10-22"
+         version="130"
+         date="2025-11-08"
          save="false"
          enabled="1">
 		 
 <text language=""
 description="Adds an expert trading skill after Advanced AutoTrade like Expert AutoMine"
 />
+<dependency id="kuerteeUIExtensionsAndHUD" optional="false" name="kuertee UI Extensions and HUD"></dependency>
 </content>

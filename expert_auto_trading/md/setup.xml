@@ -1,0 +1,248 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<diff>
+	<!-- MINING: 40+/20+ avec vérification post-création et fallbacks -->
+	<add sel="/mdscript/cues/cue[@name='Start']/patch[@sinceversion='4']//do_elseif[@value=&quot;@$playerminers.{$i}.pilot.combinedskill ge 60&quot;]" pos="after">
+		<do_elseif value="@$playerminers.{$i}.pilot.combinedskill ge 40">
+			<create_order object="$playerminers.{$i}" id="'MiningRoutine_Standard'" default="true">
+				<param name="maxwares" value="$defaultorder.$maxwares"/>
+				<param name="warebasket" value="$defaultorder.$warebasket"/>
+				<param name="range" value="$defaultorder.$range"/>
+				<param name="minbuy" value="$defaultorder.$minbuy"/>
+				<param name="maxbuy" value="$defaultorder.$maxbuy"/>
+				<param name="minsell" value="$defaultorder.$minsell"/>
+				<param name="maxsell" value="$defaultorder.$maxsell"/>
+				<param name="debugchance" value="$defaultorder.$debugchance"/>
+				<param name="debugchance2" value="$defaultorder.$debugchance2"/>
+			</create_order>
+			<do_if value="@$playerminers.{$i}.defaultorder.id != 'MiningRoutine_Standard'">
+				<set_value name="$refsector" exact="@$playerminers.{$i}.sector"/>
+				<do_if value="not $refsector and $playerminers.{$i}.zone.issuperhighway and $playerminers.{$i}.zone.destination and $playerminers.{$i}.zone.destination.sector">
+					<set_value name="$refsector" exact="$playerminers.{$i}.zone.destination.sector"/>
+				</do_if>
+				<set_value name="$locbasket" exact="if $defaultorder.$warebasket.count then $defaultorder.$warebasket.random else $defaultorder.$warebasket"/>
+				<do_if value="$refsector.exists and $defaultorder.$warebasket.count">
+					<do_all exact="$defaultorder.$warebasket.count" counter="$j">
+						<find_closest_resource ware="$defaultorder.$warebasket.{$j}" refobject="$playerminers.{$i}" sector="$resourcesector" position="$resourcepos"/>
+						<do_if value="$resourcesector.exists and ($refsector == $resourcesector)">
+							<set_value name="$locbasket" exact="$defaultorder.$warebasket.{$j}"/>
+							<break/>
+						</do_if>
+					</do_all>
+				</do_if>
+				<create_order object="$playerminers.{$i}" id="'MiningRoutine_BasicMid'" default="true">
+					<param name="warebasket" value="$locbasket"/>
+					<param name="range" value="$refsector"/>
+					<param name="minbuy" value="0"/>
+					<param name="maxbuy" value="0"/>
+					<param name="minsell" value="0"/>
+					<param name="maxsell" value="0"/>
+					<param name="debugchance" value="$defaultorder.$debugchance"/>
+					<param name="debugchance2" value="$defaultorder.$debugchance2"/>
+				</create_order>
+				<do_if value="@$playerminers.{$i}.defaultorder.id != 'MiningRoutine_BasicMid'">
+					<create_order object="$playerminers.{$i}" id="'MiningRoutine_Basic'" default="true">
+						<param name="warebasket" value="$locbasket"/>
+						<param name="range" value="$refsector"/>
+						<param name="minbuy" value="0"/>
+						<param name="maxbuy" value="0"/>
+						<param name="minsell" value="0"/>
+						<param name="maxsell" value="0"/>
+						<param name="debugchance" value="$defaultorder.$debugchance"/>
+						<param name="debugchance2" value="$defaultorder.$debugchance2"/>
+					</create_order>
+				</do_if>
+				<remove_value name="$resourcesector"/>
+				<remove_value name="$resourcepos"/>
+				<remove_value name="$locbasket"/>
+				<remove_value name="$refsector"/>
+			</do_if>
+		</do_elseif>
+
+		<do_elseif value="@$playerminers.{$i}.pilot.combinedskill ge 20">
+			<set_value name="$refsector" exact="@$playerminers.{$i}.sector"/>
+			<do_if value="not $refsector and $playerminers.{$i}.zone.issuperhighway and $playerminers.{$i}.zone.destination and $playerminers.{$i}.zone.destination.sector">
+				<set_value name="$refsector" exact="$playerminers.{$i}.zone.destination.sector"/>
+			</do_if>
+			<set_value name="$locbasket" exact="if $defaultorder.$warebasket.count then $defaultorder.$warebasket.random else $defaultorder.$warebasket"/>
+			<do_if value="$refsector.exists and $defaultorder.$warebasket.count">
+				<do_all exact="$defaultorder.$warebasket.count" counter="$j">
+					<find_closest_resource ware="$defaultorder.$warebasket.{$j}" refobject="$playerminers.{$i}" sector="$resourcesector" position="$resourcepos"/>
+					<do_if value="$resourcesector.exists and ($refsector == $resourcesector)">
+						<set_value name="$locbasket" exact="$defaultorder.$warebasket.{$j}"/>
+						<break/>
+					</do_if>
+				</do_all>
+			</do_if>
+			<create_order object="$playerminers.{$i}" id="'MiningRoutine_BasicMid'" default="true">
+				<param name="warebasket" value="$locbasket"/>
+				<param name="range" value="$refsector"/>
+				<param name="minbuy" value="0"/>
+				<param name="maxbuy" value="0"/>
+				<param name="minsell" value="0"/>
+				<param name="maxsell" value="0"/>
+				<param name="debugchance" value="$defaultorder.$debugchance"/>
+				<param name="debugchance2" value="$defaultorder.$debugchance2"/>
+			</create_order>
+			<do_if value="@$playerminers.{$i}.defaultorder.id != 'MiningRoutine_BasicMid'">
+				<create_order object="$playerminers.{$i}" id="'MiningRoutine_Basic'" default="true">
+					<param name="warebasket" value="$locbasket"/>
+					<param name="range" value="$refsector"/>
+					<param name="minbuy" value="0"/>
+					<param name="maxbuy" value="0"/>
+					<param name="minsell" value="0"/>
+					<param name="maxsell" value="0"/>
+					<param name="debugchance" value="$defaultorder.$debugchance"/>
+					<param name="debugchance2" value="$defaultorder.$debugchance2"/>
+				</create_order>
+			</do_if>
+			<remove_value name="$resourcesector"/>
+			<remove_value name="$resourcepos"/>
+			<remove_value name="$locbasket"/>
+			<remove_value name="$refsector"/>
+		</do_elseif>
+	</add>
+
+	<!-- TRADE: remplacement du do_if parent -->
+	<replace sel="/mdscript/cues/cue[@name='Start']/patch[@sinceversion='23']//do_for_each/do_if[@value=&quot;(@$locship.defaultorder.id == 'TradeRoutine') and not @$locship.commander&quot;]">
+		<do_if value="(@$locship.defaultorder.id == 'TradeRoutine') and not @$locship.commander">
+			<set_value name="$defaultorder" exact="$locship.defaultorder"/>
+
+			<do_if value="@$locship.pilot.combinedskill ge 80">
+				<create_order object="$locship" id="'TradeRoutine_Expert'" default="true">
+					<param name="warebasket" value="$defaultorder.$warebasket"/>
+					<param name="range" value="$defaultorder.$range"/>
+					<param name="minbuy" value="$defaultorder.$minbuy"/>
+					<param name="maxbuy" value="$defaultorder.$maxbuy"/>
+					<param name="minsell" value="$defaultorder.$minsell"/>
+					<param name="maxsell" value="$defaultorder.$maxsell"/>
+					<param name="debugchance" value="$defaultorder.$debugchance"/>
+					<param name="debugchance2" value="$defaultorder.$debugchance2"/>
+				</create_order>
+				<do_if value="@$locship.defaultorder.id != 'TradeRoutine_Expert'">
+					<create_order object="$locship" id="'TradeRoutine_Advanced'" default="true">
+						<param name="warebasket" value="$defaultorder.$warebasket"/>
+						<param name="range" value="$defaultorder.$range"/>
+						<param name="minbuy" value="$defaultorder.$minbuy"/>
+						<param name="maxbuy" value="$defaultorder.$maxbuy"/>
+						<param name="minsell" value="$defaultorder.$minsell"/>
+						<param name="maxsell" value="$defaultorder.$maxsell"/>
+						<param name="debugchance" value="$defaultorder.$debugchance"/>
+						<param name="debugchance2" value="$defaultorder.$debugchance2"/>
+					</create_order>
+				</do_if>
+			</do_if>
+
+			<do_elseif value="@$locship.pilot.combinedskill ge 60">
+				<create_order object="$locship" id="'TradeRoutine_Advanced'" default="true">
+					<param name="warebasket" value="$defaultorder.$warebasket"/>
+					<param name="range" value="$defaultorder.$range"/>
+					<param name="minbuy" value="$defaultorder.$minbuy"/>
+					<param name="maxbuy" value="$defaultorder.$maxbuy"/>
+					<param name="minsell" value="$defaultorder.$minsell"/>
+					<param name="maxsell" value="$defaultorder.$maxsell"/>
+					<param name="debugchance" value="$defaultorder.$debugchance"/>
+					<param name="debugchance2" value="$defaultorder.$debugchance2"/>
+				</create_order>
+			</do_elseif>
+
+			<do_elseif value="@$locship.pilot.combinedskill ge 40">
+				<create_order object="$locship" id="'TradeRoutine_Standard'" default="true">
+					<param name="maxwares" value="$defaultorder.$maxwares"/>
+					<param name="warebasket" value="$defaultorder.$warebasket"/>
+					<param name="range" value="$defaultorder.$range"/>
+					<param name="minbuy" value="$defaultorder.$minbuy"/>
+					<param name="maxbuy" value="$defaultorder.$maxbuy"/>
+					<param name="minsell" value="$defaultorder.$minsell"/>
+					<param name="maxsell" value="$defaultorder.$maxsell"/>
+					<param name="debugchance" value="$defaultorder.$debugchance"/>
+					<param name="debugchance2" value="$defaultorder.$debugchance2"/>
+				</create_order>
+				<do_if value="@$locship.defaultorder.id != 'TradeRoutine_Standard'">
+					<set_value name="$refsector" exact="@$locship.sector"/>
+					<do_if value="not $refsector and $locship.zone.issuperhighway and $locship.zone.destination and $locship.zone.destination.sector">
+						<set_value name="$refsector" exact="$locship.zone.destination.sector"/>
+					</do_if>
+					<set_value name="$locbasket" exact="if $defaultorder.$warebasket.count then $defaultorder.$warebasket.random else $defaultorder.$warebasket"/>
+					<create_order object="$locship" id="'TradeRoutine_BasicMid'" default="true">
+						<param name="warebasket" value="$locbasket"/>
+						<param name="range" value="$refsector"/>
+						<param name="minbuy" value="0"/>
+						<param name="maxbuy" value="0"/>
+						<param name="minsell" value="0"/>
+						<param name="maxsell" value="0"/>
+						<param name="debugchance" value="$defaultorder.$debugchance"/>
+						<param name="debugchance2" value="$defaultorder.$debugchance2"/>
+					</create_order>
+					<do_if value="@$locship.defaultorder.id != 'TradeRoutine_BasicMid'">
+						<create_order object="$locship" id="'TradeRoutine_Basic'" default="true">
+							<param name="warebasket" value="$locbasket"/>
+							<param name="range" value="$refsector"/>
+							<param name="minbuy" value="0"/>
+							<param name="maxbuy" value="0"/>
+							<param name="minsell" value="0"/>
+							<param name="maxsell" value="0"/>
+							<param name="debugchance" value="$defaultorder.$debugchance"/>
+							<param name="debugchance2" value="$defaultorder.$debugchance2"/>
+						</create_order>
+					</do_if>
+					<remove_value name="$locbasket"/>
+					<remove_value name="$refsector"/>
+				</do_if>
+			</do_elseif>
+
+			<do_elseif value="@$locship.pilot.combinedskill ge 20">
+				<set_value name="$refsector" exact="@$locship.sector"/>
+				<do_if value="not $refsector and $locship.zone.issuperhighway and $locship.zone.destination and $locship.zone.destination.sector">
+					<set_value name="$refsector" exact="$locship.zone.destination.sector"/>
+				</do_if>
+				<set_value name="$locbasket" exact="if $defaultorder.$warebasket.count then $defaultorder.$warebasket.random else $defaultorder.$warebasket"/>
+				<create_order object="$locship" id="'TradeRoutine_BasicMid'" default="true">
+					<param name="warebasket" value="$locbasket"/>
+					<param name="range" value="$refsector"/>
+					<param name="minbuy" value="0"/>
+					<param name="maxbuy" value="0"/>
+					<param name="minsell" value="0"/>
+					<param name="maxsell" value="0"/>
+					<param name="debugchance" value="$defaultorder.$debugchance"/>
+					<param name="debugchance2" value="$defaultorder.$debugchance2"/>
+				</create_order>
+				<do_if value="@$locship.defaultorder.id != 'TradeRoutine_BasicMid'">
+					<create_order object="$locship" id="'TradeRoutine_Basic'" default="true">
+						<param name="warebasket" value="$locbasket"/>
+						<param name="range" value="$refsector"/>
+						<param name="minbuy" value="0"/>
+						<param name="maxbuy" value="0"/>
+						<param name="minsell" value="0"/>
+						<param name="maxsell" value="0"/>
+						<param name="debugchance" value="$defaultorder.$debugchance"/>
+						<param name="debugchance2" value="$defaultorder.$debugchance2"/>
+					</create_order>
+				</do_if>
+				<remove_value name="$locbasket"/>
+				<remove_value name="$refsector"/>
+			</do_elseif>
+
+			<do_else>
+				<set_value name="$refsector" exact="@$locship.sector"/>
+				<do_if value="not $refsector and $locship.zone.issuperhighway and $locship.zone.destination and $locship.zone.destination.sector">
+					<set_value name="$refsector" exact="$locship.zone.destination.sector"/>
+				</do_if>
+				<set_value name="$locbasket" exact="$defaultorder.$warebasket.random"/>
+				<create_order object="$locship" id="'TradeRoutine_Basic'" default="true">
+					<param name="warebasket" value="$locbasket"/>
+					<param name="range" value="$refsector"/>
+					<param name="minbuy" value="0"/>
+					<param name="maxbuy" value="0"/>
+					<param name="minsell" value="0"/>
+					<param name="maxsell" value="0"/>
+					<param name="debugchance" value="$defaultorder.$debugchance"/>
+					<param name="debugchance2" value="$defaultorder.$debugchance2"/>
+				</create_order>
+				<remove_value name="$locbasket"/>
+				<remove_value name="$refsector"/>
+			</do_else>
+
+			<remove_value name="$defaultorder"/>
+		</do_if>
+	</replace>
+</diff>
