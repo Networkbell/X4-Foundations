@@ -1,50 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <language>
 
-	<page id="1819190160" voice="no">
+	<!--<page id="1819190160" voice="no">
 		<t id="1">0- Local AutoMine</t>
-	</page>
+	</page>-->
 		
-	<page id="1819190161" voice="no">
+	<!--<page id="1819190161" voice="no">
 		<t id="1">0- Local AutoTrade</t>
-	</page>
+	</page>-->
 		
 	<page id="1819190162" voice="no">
-		<t id="1">1- Basic AutoMine</t>
+		<t id="1">Basic AutoMine</t>
 		<t id="2">Allows you to mine and sell a single resource within a radius of 1 to 5 sectors depending on your piloting or management skills.</t>
 	</page>
 	
 	<page id="1819190163" voice="no">
-		<t id="1">1- Basic AutoTrade</t>
+		<t id="1">Basic AutoTrade</t>
 		<t id="2">Allows you to trade by buying and selling a single resource within a radius of 1 to 5 sectors depending on your piloting or management skills.</t>
 	</page>
 	
 	<page id="1819190164" voice="no">
-		<t id="1">2- Standard AutoMine</t>
+		<t id="1">Standard AutoMine</t>
 		<t id="2">Allows you to mine and sell multiple resources within 1 to 4 sectors, depending on your piloting or management skills. If you select more mineable resources than allowed, only the first ones will be used.</t>
 		<t id="3">Max resources</t>
 	</page>
 	
 	<page id="1819190165" voice="no">
-		<t id="1">2- Standard AutoTrade</t>
+		<t id="1">Standard AutoTrade</t>
 		<t id="2">Allows you to trade by buying and selling multiple resources within a radius of 1 to 4 sectors depending on your piloting or management skills. If you select more wares than allowed, only the first wares up to your maximum will be used.</t>
 		<t id="3">Max wares</t>
 	</page>
 	
-	<page id="1819190166" voice="no">
+	<!--<page id="1819190166" voice="no">
 		<t id="1">3- Advanced AutoMine</t>
-	</page>
+	</page>-->
 	
-	<page id="1819190167" voice="no">
+	<!--<page id="1819190167" voice="no">
 		<t id="1">3- Advanced AutoTrade</t>
-	</page>
+	</page>-->
 	
-	<page id="1819190168" voice="no">
+	<!--<page id="1819190168" voice="no">
 		<t id="1">4- Expert AutoMine</t>
-	</page>
+	</page>-->
 	
 	<page id="1819190169" voice="no">
-		<t id="1">4- Expert AutoTrade</t>
+		<t id="1">Expert AutoTrade</t>
 		<t id="2">Allows you to trade by buying and selling multiple wares within a radius of up to 10 sectors depending on your piloting or management skills.</t>
 	</page>
 	

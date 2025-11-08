@@ -2,50 +2,50 @@
 <diff>
 	<add sel="/language">
 	
-		<page id="1819190160" voice="no">
+		<!--<page id="1819190160" voice="no">
 			<t id="1">0- Minage local auto</t>
-		</page>
+		</page>-->
 		
-		<page id="1819190161" voice="no">
+		<!--<page id="1819190161" voice="no">
 			<t id="1">0- Commerce local auto</t>
-		</page>
+		</page>-->
 		
 		<page id="1819190162" voice="no">
-			<t id="1">1- Minage basique auto</t>
+			<t id="1">Minage basique auto</t>
 			<t id="2">Permet de miner et de vendre une unique ressource dans un rayon de 1 à 5 secteurs en fonction de vos compétences de pilotages ou de gestion.</t>		
 		</page>
 		
 		<page id="1819190163" voice="no">
-			<t id="1">1- Commerce basique auto</t>
+			<t id="1">Commerce basique auto</t>
 			<t id="2">Permet de commercer en achetant et vendant une unique ressource dans un rayon de 1 à 5 secteurs en fonction de vos compétences de pilotages ou de gestion.</t>		
 		</page>
 		
 		<page id="1819190164" voice="no">
-			<t id="1">2- Minage standard auto</t>
+			<t id="1">Minage standard auto</t>
 			<t id="2">Vous permet de miner et de vendre plusieurs ressources dans un rayon de 1 à 4 secteurs, selon vos compétences de pilotage ou de gestion. Si vous sélectionnez plus de ressources minables que ce qui est autorisé, seules les premières seront utilisées.</t>
 			<t id="3">Ressources max</t>
 		</page>
 		
 		<page id="1819190165" voice="no">
-			<t id="1">2- Commerce standard auto</t>
+			<t id="1">Commerce standard auto</t>
 			<t id="2">Vous permet d'échanger en achetant et en vendant plusieurs ressources dans un rayon de 1 à 4 secteurs, selon vos compétences de pilotage ou de gestion. Si vous sélectionnez plus de marchandises que ce qui est autorisé, seules les premières seront utilisées.</t>
 			<t id="3">Marchandises max</t>
 		</page>
 		
-		<page id="1819190166" voice="no">
+		<!--<page id="1819190166" voice="no">
 			<t id="1">3- Minage avancé auto</t>
-		</page>
+		</page>-->
 		
-		<page id="1819190167" voice="no">
+		<!--<page id="1819190167" voice="no">
 			<t id="1">3- Commerce avancé auto</t>
-		</page>
+		</page>-->
 		
-		<page id="1819190168" voice="no">
+		<!--<page id="1819190168" voice="no">
 			<t id="1">4- Minage expert auto</t>
-		</page>
+		</page>-->
 		
 		<page id="1819190169" voice="no">
-			<t id="1">4- Commerce expert auto</t>
+			<t id="1">Commerce expert auto</t>
 			<t id="2">Permet de commercer en achetant et vendant de multiples ressources dans un rayon jusqu'à 10 secteurs en fonction de vos compétences de pilotages ou de gestion.</t>		
 		</page>
 		

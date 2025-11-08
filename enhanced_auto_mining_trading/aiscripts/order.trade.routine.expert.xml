@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <aiscript name="order.trade.routine.expert" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd">
-	<order id="TradeRoutine_BasicMidStandardAdvancedExpert" name="{1819190169, 1}" description="{1819190169, 2}" category="trade" allowinloop="false">
+	<order id="TradeRoutine_Expert" name="{1819190169, 1}" description="{1819190169, 2}" category="trade" allowinloop="false">
 		<params>
 			<param name="warebasket" required="true" default="this.ship.warebasket.list" type="list" text="{1041, 10146}" comment="Wares. List of resources that we will supply.">
 				<input_param name="type" value="'ware'"/>

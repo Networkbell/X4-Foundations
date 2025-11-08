@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <aiscript name="order.trade.routine.standard" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd">
-	<order id="TradeRoutine_BasicMidStandard" name="{1819190165, 1}" description="{1819190165, 2}" category="trade" allowinloop="false">
+	<order id="TradeRoutine_Standard" name="{1819190165, 1}" description="{1819190165, 2}" category="trade" allowinloop="false">
 		<params>
 
 			<param name="maxwares" default="([@this.ship.commander.tradenpc.skill.management, @this.ship.pilot.skill.piloting].max / 3) * 2" type="number" text="{1819190165, 3}" comment="Maximum number of selectable wares.">

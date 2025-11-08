@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <diff>
-	<replace sel="/aiscript/attention//do_if[@value=&quot;this.isplayerowned and this.shouldinformplayer and (@this.ship.defaultorder.id != 'TradeRoutine') and (@this.ship.defaultorder.id != 'TradeRoutine_Basic') and (@this.ship.defaultorder.id != 'TradeRoutine_Advanced') and (@this.ship.defaultorder.id != 'Middleman') &quot;]">
-		<do_if value="this.isplayerowned and this.shouldinformplayer and (@this.ship.defaultorder.id != 'TradeRoutine') and (@this.ship.defaultorder.id != 'TradeRoutine_Basic') and (@this.ship.defaultorder.id != 'TradeRoutine_BasicMid') and (@this.ship.defaultorder.id != 'TradeRoutine_BasicMidStandard') and (@this.ship.defaultorder.id != 'TradeRoutine_BasicMidStandardAdvanced') and (@this.ship.defaultorder.id != 'TradeRoutine_BasicMidStandardAdvancedExpert') and (@this.ship.defaultorder.id != 'TradeRoutine_Advanced') and (@this.ship.defaultorder.id != 'Middleman') ">
-			<set_value name="$tradeorders" exact="this.ship.tradeorders" />
+	<replace sel="/aiscript/attention/actions/do_else/do_if[@value=&quot;this.isplayerowned and this.shouldinformplayer and (@this.ship.defaultorder.id != 'TradeRoutine') and (@this.ship.defaultorder.id != 'TradeRoutine_Basic') and (@this.ship.defaultorder.id != 'TradeRoutine_Advanced') and (@this.ship.defaultorder.id != 'Middleman')&quot;]">
+		<do_if value="this.isplayerowned and this.shouldinformplayer and (@this.ship.defaultorder.id != 'TradeRoutine') and (@this.ship.defaultorder.id != 'TradeRoutine_Basic') and (@this.ship.defaultorder.id != 'TradeRoutine_BasicMid') and (@this.ship.defaultorder.id != 'TradeRoutine_Standard') and (@this.ship.defaultorder.id != 'TradeRoutine_Expert') and (@this.ship.defaultorder.id != 'TradeRoutine_Advanced') and (@this.ship.defaultorder.id != 'Middleman')">
+			<set_value name="$tradeorders" exact="this.ship.tradeorders"/>
 			<do_if value="$tradeorders.count == 0 or ($tradeorders.count == 1 and $tradeorders.{1} == this.ship.order)">
-				<set_value name="$logtext" exact="[this.name, '', this.ship.name, '', {1015,32}]" />
-				<set_value name="$tickertext" exact="$logtext.clone" />
-				<set_value name="$tickertext.{1}" operation="insert" exact="{1015,31}" />
-				<set_value name="$tickertext.{2}" operation="insert" exact="''" />
+				<set_value name="$logtext" exact="[this.name, '', this.ship.name, '', {1015,32}]"/>
+				<set_value name="$tickertext" exact="$logtext.clone"/>
+				<set_value name="$tickertext.{1}" operation="insert" exact="{1015,31}"/>
+				<set_value name="$tickertext.{2}" operation="insert" exact="''"/>
 				<do_if value="notification.trade_queue_completed.active">
-					<show_notification text="$tickertext" sound="notification_achievement" comment="All trade operations completed." />
+					<show_notification text="$tickertext" sound="notification_achievement"/>
 				</do_if>
-				<write_to_logbook category="general" title="{1015,31}" text="$logtext" />
+				<write_to_logbook category="general" title="{1015,31}" text="$logtext"/>
 			</do_if>
 		</do_if>
 	</replace>
