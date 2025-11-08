@@ -3,8 +3,8 @@
          name="Standard AutoMine"
          description="Adds an intermediate mining skill between Basic AutoMine (Mod) and Advanced AutoMine (Vanilla)."
          author="DamonYa"
-         version="110"
-         date="2025-10-22"
+         version="130"
+         date="2025-11-07"
          save="false"
          enabled="1">
 		 

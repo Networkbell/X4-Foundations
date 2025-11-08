@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <aiscript name="order.mining.routine.standard" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="1">
-	<order id="MiningRoutine_BasicMidStandard" name="{1819190164, 1}" description="{1819190164, 2}" category="mining" allowinloop="false">
+	<order id="MiningRoutine_Standard" name="{1819190164, 1}" description="{1819190164, 2}" category="mining" allowinloop="false">
 		<params>
 
 			<param name="maxwares" default="[@this.ship.commander.tradenpc.skill.management, @this.ship.pilot.skill.piloting].max / 3" type="number" text="{1819190164, 3}" comment="Maximum number of selectable wares.">

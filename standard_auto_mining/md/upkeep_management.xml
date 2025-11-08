@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<diff>
+	<replace sel="/mdscript/cues/library[@name='Check_ResourceProbes']//do_if[@value=&quot;$Order.id == 'MiningRoutine_Basic' or $Order.id == 'MiningRoutine_Advanced' or $Order.id == 'MiningRoutine_Expert' or $Order.id == 'MiningRoutine'&quot;]">
+		<do_if value="$Order.id == 'MiningRoutine' or $Order.id == 'MiningRoutine_Advanced' or $Order.id == 'MiningRoutine_Basic' or $Order.id == 'MiningRoutine_BasicMid' or $Order.id == 'MiningRoutine_Standard' or $Order.id == 'MiningRoutine_Expert'">
+			<!--Check for Resource Probes deployed-->
+			<find_sector_in_range object="$Order.$range" name="$Spaces" mindistance="$Order.$minbuy" maxdistance="$Order.$maxbuy" multiple="true"/>
+			<set_value name="$HasProbe" exact="false"/>
+			<do_for_each name="$MiningSpace" in="$Spaces">
+				<do_if value="$ResourceProbeTable.{$MiningSpace}?">
+					<do_if value="$ResourceProbeTable.{$MiningSpace}">
+						<set_value name="$HasProbe" exact="true"/>
+						<break/>
+					</do_if>
+				</do_if>
+				<do_else>
+					<find_object name="$ResourceProbe" deployablecategory="deployablecategory.resourceprobe" owner="faction.player" space="$MiningSpace"/>
+					<set_value name="$ResourceProbeTable.{$MiningSpace}" exact="$ResourceProbe.exists"/>
+					<do_if value="$ResourceProbe">
+						<set_value name="$HasProbe" exact="true"/>
+						<break/>
+					</do_if>
+				</do_else>
+			</do_for_each>
+
+			<do_if value="$HasProbe">
+				<signal_objects object="$Object" param="'upkeep_resource_probe_present'"/>
+			</do_if>
+			<do_else>
+				<signal_cue_instantly cue="md.Upkeep.Deploy_Probe_Start_V2" param="[null, $Object, $Spaces]"/>
+				<include_actions ref="PostMissionAddedActions"/>
+			</do_else>
+			<remove_value name="$ResourceProbe"/>
+			<remove_value name="$HasProbe"/>
+		</do_if>
+	</replace>
+</diff>
