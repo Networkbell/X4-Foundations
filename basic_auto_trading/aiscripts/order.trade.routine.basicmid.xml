@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<aiscript name="order.trade.routine.basicmid" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd">
+<aiscript name="order.trade.routine.basicmid" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="1">
 	<order id="TradeRoutine_BasicMid" name="{1819190163, 1}" description="{1819190163, 2}" category="trade" allowinloop="false">
 		<params>
 			<param name="warebasket" required="true" default="this.ship.warebasket.random" type="ware" text="{1041, 10144}" comment="Ware. Resource that we will supply.">
