@@ -5,6 +5,7 @@
     Original author: Assailer
     Adaptations and compatibility fixes for X4 v8.0 by: Damonya
     I (Damonya) only corrected and published this version on my GitHub.
+    Version 1.2 Damonya
 -->
 <aiscript name="sectorexplorer" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="5">
 	<order id="SectorExplorer" name="{314154, 12}" description="{314154, 12}" category="navigation" infinite="true">
@@ -30,6 +31,9 @@
 			<param name="fs_reset" default="false" type="bool" text="{314154, 18}"/>
 			<param name="fs_notify" default="true" type="bool" text="{314154, 19}"/>
 			<param name="fs_unique" default="true" type="bool" text="Explore unique sectors only (no revisits)"/>
+			<param name="debugchance" type="bool" default="0" advanced="true" text="{1041, 10086}" comment="Print debug output">
+				<input_param name="truevalue" value="100"/>
+			</param>
 		</params>
 		<requires>
 			<match shiptype="shiptype.lasertower" negate="true"/>
@@ -77,7 +81,9 @@
 		</do_else>
 
 		<do_if value="$fs_reset and global.$fs_explored_sectors.{$sector}?">
-			<set_value name="global.$fs_explored_sectors.{$sector}" exact="table[{1} = 0km, {2} = 0s]"/>
+			<set_value name="global.$fs_explored_sectors.{$sector}" exact="table[]"/>
+			<set_value name="global.$fs_explored_sectors.{$sector}.{1}" exact="0km"/>
+			<set_value name="global.$fs_explored_sectors.{$sector}.{2}" exact="0s"/>
 		</do_if>
 	</init>
 
@@ -106,11 +112,11 @@
 						</do_all>
 						<remove_value name="$candidate"/>
 					</do_if>
-					
+
 					<do_if value="$fs_targets.count == 0">
 						<resume label="explorer_objects"/>
 					</do_if>
-					
+
 					<do_if value="$fs_targets.count">
 						<shuffle_list list="$fs_targets"/>
 
@@ -122,54 +128,58 @@
 							</do_if>
 
 							<do_if value="not global.$fs_explored_sectors.{$fs_target}?">
-								<set_value name="global.$fs_explored_sectors.{$fs_target}" exact="table[{1} = 0km, {2} = 0s]"/>
+								<set_value name="global.$fs_explored_sectors.{$fs_target}" exact="table[]"/>
+								<set_value name="global.$fs_explored_sectors.{$fs_target}.{1}" exact="0km"/>
+								<set_value name="global.$fs_explored_sectors.{$fs_target}.{2}" exact="0s"/>
 							</do_if>
 
 							<wait min="0.1s" max="0.2s"/>
 
 							<do_if value="@global.$fs_explored_sectors.{$fs_target}.{2} lt player.age">
-								<do_if value="not $fs_target.isblacklisted.{blacklisttype.sectoractivity}.{blacklistgroup.civilian}.{$ship}">
-									<set_value name="$allow" exact="false"/>
 
-									<set_value name="$fs_objects" exact="[]"/>
+								<do_if value="@$fs_target.isblacklisted.{blacklisttype.sectoractivity}.{blacklistgroup.civilian}.{$ship}">
+									<debug_text text="'fs_exp: skip blacklisted sector %1'.[$fs_target.knownname]" chance="$debugchance"/>
+									<continue/>
+								</do_if>
+								<set_value name="$allow" exact="false"/>
 
-									<find_object name="$fs_objects" space="$fs_target" class="[class.gate]" known="false" multiple="true">
+								<set_value name="$fs_objects" exact="[]"/>
+
+								<find_object name="$fs_objects" space="$fs_target" class="[class.gate]" known="false" multiple="true">
+									<match_relation_to object="$ship" relation="neutral" comparison="ge"/>
+								</find_object>
+
+								<do_if value="$fs_stations? and $fs_stations">
+									<find_object name="$fs_objects" space="$fs_target" class="[class.station]" known="false" multiple="true" append="true">
 										<match_relation_to object="$ship" relation="neutral" comparison="ge"/>
 									</find_object>
+								</do_if>
 
-									<do_if value="$fs_stations? and $fs_stations">
-										<find_object name="$fs_objects" space="$fs_target" class="[class.station]" known="false" multiple="true" append="true">
-											<match_relation_to object="$ship" relation="neutral" comparison="ge"/>
-										</find_object>
-									</do_if>
+								<do_if value="$fs_objects.count">
+									<set_value name="$allow" exact="true"/>
+								</do_if>
 
-									<!--set_value name="$message" exact="$message + '\n%1 objects:%2'.[$fs_target.knownname, $fs_objects.count]"/-->
-
-									<do_if value="$fs_objects.count">
+								<do_if value="not $fs_skiphexagon">
+									<do_if value="global.$fs_explored_sectors.{$fs_target}.{1} lt $fs_radius">
 										<set_value name="$allow" exact="true"/>
 									</do_if>
+								</do_if>
 
-									<do_if value="not $fs_skiphexagon">
-										<do_if value="global.$fs_explored_sectors.{$fs_target}.{1} lt $fs_radius">
-											<set_value name="$allow" exact="true"/>
-										</do_if>
+								<do_if value="$allow">
+									<do_if value="$fs_unique">
+										<set_value name="global.$fs_explored_sectors.{$fs_target}" exact="table[]"/>
+										<set_value name="global.$fs_explored_sectors.{$fs_target}.{1}" exact="$fs_radius"/>
+										<!-- 90d = 7 776 000s -->
+										<set_value name="global.$fs_explored_sectors.{$fs_target}.{2}" exact="player.age + 7776000s"/>
+										<set_value name="global.$fs_explored_sectors.{$fs_target}.{3}" exact="true"/>
 
-										<!--set_value name="$message" exact="$message + ' fog:%1 range:%2'.[global.$fs_explored_sectors.{$fs_target}.{1}, $fs_radius]"/-->
+										<debug_text text="'fs_exp: sector %1 marked unique until %2'.[$fs_target.knownname, global.$fs_explored_sectors.{$fs_target}.{2}]" chance="$debugchance"/>
 									</do_if>
+									<do_else>
+										<set_value name="global.$fs_explored_sectors.{$fs_target}.{2}" exact="player.age + 600s"/>
+									</do_else>
 
-									<do_if value="$allow">
-										
-										<do_if value="$fs_unique">
-											<!-- mark fully explored and long cooldown when unique mode is ON -->
-											<set_value name="global.$fs_explored_sectors.{$fs_target}" exact="table[{1} = $fs_radius, {2} = player.age + 90d, {3} = true]"/>
-										</do_if>
-										<do_else>
-											<!-- keep current short cooldown when unique mode is OFF -->
-											<set_value name="global.$fs_explored_sectors.{$fs_target}.{2}" exact="player.age + 600s"/>
-										</do_else>
-
-										<resume label="explorer_travelling"/>
-									</do_if>
+									<resume label="explorer_travelling"/>
 								</do_if>
 							</do_if>
 						</do_all>
@@ -282,7 +292,9 @@
 
 			<!-- creation -->
 			<do_if value="not global.$fs_explored_sectors.{$sector}?">
-				<set_value name="global.$fs_explored_sectors.{$sector}" exact="table[{1} = 0km, {2} = 0s]"/>
+				<set_value name="global.$fs_explored_sectors.{$sector}" exact="table[]"/>
+				<set_value name="global.$fs_explored_sectors.{$sector}.{1}" exact="0km"/>
+				<set_value name="global.$fs_explored_sectors.{$sector}.{2}" exact="0s"/>
 			</do_if>
 
 			<set_value name="$fs_progress" exact="global.$fs_explored_sectors.{$sector}.{1}"/>
@@ -341,41 +353,41 @@
 						<create_position name="$finalpos" x="$fs_anchor.x + sin($fs_angle) * $fs_range" y="$fs_anchor.y + 40km" z="$fs_anchor.z + cos($fs_angle) * $fs_range" space="$sector"/>
 
 						<do_if value="(not $pilot_fs_probe?) or (not $pilot_fs_probe.isclass.satellite)">
-						
-						<create_object name="$pilot_fs_probe" macro="macro.eq_arg_satellite_02_macro" owner="faction.player" sector="$sector">
-							<position x="$finalpos.x" y="$finalpos.y" z="$finalpos.z"/>
-						</create_object>
-						<do_if value="$pilot_fs_probe?">
-							<set_value name="$ship.pilot.fs_exp_probe" exact="$pilot_fs_probe"/>
-						</do_if>
 
-						
-						<do_if value="not $pilot_fs_probe?">
-							<debug_text text="'fs_exp: macro eq_arg_satellite_02_macro failed — trying launch_satellite fallback'" filter="error"/>
-							<do_if value="$ship.ammostorage.{deployablecategory.satellite}.count gt 0">
-                                <launch_satellite object="$ship" macro="macro.eq_arg_satellite_02_macro"/>
-                                <wait min="0.5s" max="1s"/>
-                                <find_object name="$recent_satellites" space="$sector" class="[class.satellite]" trueowner="faction.player" multiple="true">
-                                    <match_distance object="$ship" max="1km"/>
-                                </find_object>
-                                <do_if value="$recent_satellites.count">
-                                    <set_value name="$pilot_fs_probe" exact="$recent_satellites.{1}"/>
-                                    <set_value name="$ship.pilot.fs_exp_probe" exact="$pilot_fs_probe"/>
-                                </do_if>
-                                <remove_value name="$recent_satellites"/>
-                            </do_if>
-						</do_if>
-
-						
-						<do_if value="not $pilot_fs_probe?">
-							<debug_text text="'fs_exp: launch_satellite fallback failed — trying backup macro eq_arg_satellite_01_macro'" filter="error"/>
-							<create_object name="$pilot_fs_probe" macro="macro.eq_arg_satellite_01_macro" owner="faction.player" sector="$sector">
+							<create_object name="$pilot_fs_probe" macro="macro.eq_arg_satellite_02_macro" owner="faction.player" sector="$sector">
 								<position x="$finalpos.x" y="$finalpos.y" z="$finalpos.z"/>
 							</create_object>
 							<do_if value="$pilot_fs_probe?">
 								<set_value name="$ship.pilot.fs_exp_probe" exact="$pilot_fs_probe"/>
 							</do_if>
-						</do_if>
+
+
+							<do_if value="not $pilot_fs_probe?">
+								<debug_text text="'fs_exp: macro eq_arg_satellite_02_macro failed - trying launch_satellite fallback'" chance="$debugchance"/>
+								<do_if value="$ship.ammostorage.{deployablecategory.satellite}.count gt 0">
+									<launch_satellite object="$ship" macro="macro.eq_arg_satellite_02_macro"/>
+									<wait min="0.5s" max="1s"/>
+									<find_object name="$recent_satellites" space="$sector" class="[class.satellite]" trueowner="faction.player" multiple="true">
+										<match_distance object="$ship" max="1km"/>
+									</find_object>
+									<do_if value="$recent_satellites.count">
+										<set_value name="$pilot_fs_probe" exact="$recent_satellites.{1}"/>
+										<set_value name="$ship.pilot.fs_exp_probe" exact="$pilot_fs_probe"/>
+									</do_if>
+									<remove_value name="$recent_satellites"/>
+								</do_if>
+							</do_if>
+
+
+							<do_if value="not $pilot_fs_probe?">
+								<debug_text text="'fs_exp: launch_satellite fallback failed - trying backup macro eq_arg_satellite_01_macro'" chance="$debugchance"/>
+								<create_object name="$pilot_fs_probe" macro="macro.eq_arg_satellite_01_macro" owner="faction.player" sector="$sector">
+									<position x="$finalpos.x" y="$finalpos.y" z="$finalpos.z"/>
+								</create_object>
+								<do_if value="$pilot_fs_probe?">
+									<set_value name="$ship.pilot.fs_exp_probe" exact="$pilot_fs_probe"/>
+								</do_if>
+							</do_if>
 						</do_if>
 
 						<warp object="$pilot_fs_probe" sector="$sector">
@@ -471,7 +483,9 @@
 				<set_value name="$ship.pilot.fs_exp_range" exact="$pilot_fs_range"/>
 
 				<do_if value="global.$fs_explored_sectors.{$sector}.{1} lt $fs_range">
-					<set_value name="global.$fs_explored_sectors.{$sector}" exact="table[{1} = $fs_range, {2} = player.age + 600s]"/>
+					<set_value name="global.$fs_explored_sectors.{$sector}" exact="table[]"/>
+					<set_value name="global.$fs_explored_sectors.{$sector}.{1}" exact="$fs_range"/>
+					<set_value name="global.$fs_explored_sectors.{$sector}.{2}" exact="player.age + 600s"/>
 				</do_if>
 
 				<do_if value="$fs_range gt 150km">
