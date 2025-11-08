@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<diff>
+	<replace sel="//library[@name='ShowOverlay']//do_elseif[@value=&quot;$Order.id == 'TradeRoutine' or $Order.id == 'TradeRoutine_Expert' or $Order.id == 'TradeRoutine_Basic' or $Order.id == 'TradeRoutine_Advanced'&quot;]">
+		<do_elseif value="$Order.id == 'TradeRoutine' or $Order.id == 'TradeRoutine_Basic' or $Order.id == 'TradeRoutine_Advanced' or $Order.id == 'TradeRoutine_BasicMid' or $Order.id == 'TradeRoutine_Standard' or $Order.id == 'TradeRoutine_Expert'">
+			<set_value name="$Wares" exact="''"/>
+			<do_if value="$Order.$warebasket.count gt 0">
+				<do_for_each name="$Ware" in="$Order.$warebasket" counter="$Index">
+					<do_if value="$Index lt $Order.$warebasket.count">
+						<set_value name="$Wares" exact="$Wares + '%s, '.[$Ware]"/>
+					</do_if>
+					<do_else>
+						<set_value name="$Wares" exact="$Wares + '%s'.[$Ware]"/>
+					</do_else>
+				</do_for_each>
+				<set_value name="$StatusText" exact="$Order.name + {1001,120} + ' ' + $Wares"/>
+			</do_if>
+			<do_else>
+				<set_value name="$StatusText" exact="$Order.name"/>
+			</do_else>
+		</do_elseif>
+	</replace>
+
+	<replace sel="//library[@name='ShowOverlay']//do_elseif[@value=&quot;$Order.id == 'MiningRoutine' or $Order.id == 'MiningRoutine_Expert' or $Order.id == 'MiningRoutine_Basic' or $Order.id == 'MiningRoutine_Advanced'&quot;]">
+		<do_elseif value="$Order.id == 'MiningRoutine' or $Order.id == 'MiningRoutine_Basic' or $Order.id == 'MiningRoutine_Advanced' or $Order.id == 'MiningRoutine_BasicMid' or $Order.id == 'MiningRoutine_Standard' or $Order.id == 'MiningRoutine_Expert'">
+			<set_value name="$Wares" exact="''"/>
+			<do_if value="not @$Order.$warebasket.count">
+				<set_value name="$Wares" exact="$Order.$warebasket"/>
+			</do_if>
+			<do_if value="@$Order.$warebasket.count and $Order.$warebasket.count gt 0">
+				<do_for_each name="$Ware" in="$Order.$warebasket" counter="$Index">
+					<do_if value="$Index lt $Order.$warebasket.count">
+						<set_value name="$Wares" exact="$Wares + '%s, '.[$Ware]"/>
+					</do_if>
+					<do_else>
+						<set_value name="$Wares" exact="$Wares + '%s'.[$Ware]"/>
+					</do_else>
+				</do_for_each>
+			</do_if>
+			<do_if value="$Wares != ''">
+				<set_value name="$StatusText" exact="$Order.name + {1001,120} + ' ' + $Wares"/>
+			</do_if>
+			<do_else>
+				<set_value name="$StatusText" exact="$Order.name"/>
+			</do_else>
+		</do_elseif>
+	</replace>
+</diff>

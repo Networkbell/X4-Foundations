@@ -1,19 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <diff>
 	<replace sel="/aiscript/init//do_if[@value=&quot;(this.assignedcontrolled.order.id == 'TradeRoutine') or (this.assignedcontrolled.order.id == 'TradeRoutine_Basic') or (this.assignedcontrolled.order.id == 'TradeRoutine_Advanced')&quot;]">
-		<do_if value="(this.assignedcontrolled.order.id == 'TradeRoutine') or (this.assignedcontrolled.order.id == 'TradeRoutine_Basic') or (this.assignedcontrolled.order.id == 'TradeRoutine_Advanced') or (this.assignedcontrolled.order.id == 'TradeRoutine_BasicMid') or (this.assignedcontrolled.order.id == 'TradeRoutine_BasicMidStandard') or (this.assignedcontrolled.order.id == 'TradeRoutine_BasicMidStandardAdvanced') or (this.assignedcontrolled.order.id == 'TradeRoutine_BasicMidStandardAdvancedExpert')">
+		<do_if value="(this.assignedcontrolled.order.id == 'TradeRoutine') or (this.assignedcontrolled.order.id == 'TradeRoutine_Basic') or (this.assignedcontrolled.order.id == 'TradeRoutine_Advanced') or (this.assignedcontrolled.order.id == 'TradeRoutine_BasicMid') or (this.assignedcontrolled.order.id == 'TradeRoutine_Standard') or (this.assignedcontrolled.order.id == 'TradeRoutine_Expert')">
 			<set_value name="$thisorder" exact="this.assignedcontrolled.order"/>
 		</do_if>
 	</replace>
 
 	<replace sel="/aiscript/patch[@sinceversion='10']//do_if[@value=&quot;(this.assignedcontrolled.order.id == 'TradeRoutine') or (this.assignedcontrolled.order.id == 'TradeRoutine_Basic') or (this.assignedcontrolled.order.id == 'TradeRoutine_Advanced')&quot;]">
-		<do_if value="(this.assignedcontrolled.order.id == 'TradeRoutine') or (this.assignedcontrolled.order.id == 'TradeRoutine_Basic') or (this.assignedcontrolled.order.id == 'TradeRoutine_Advanced') or (this.assignedcontrolled.order.id == 'TradeRoutine_BasicMid') or (this.assignedcontrolled.order.id == 'TradeRoutine_BasicMidStandard') or (this.assignedcontrolled.order.id == 'TradeRoutine_BasicMidStandardAdvanced') or (this.assignedcontrolled.order.id == 'TradeRoutine_BasicMidStandardAdvancedExpert')">
+		<do_if value="(this.assignedcontrolled.order.id == 'TradeRoutine') or (this.assignedcontrolled.order.id == 'TradeRoutine_Basic') or (this.assignedcontrolled.order.id == 'TradeRoutine_Advanced') or (this.assignedcontrolled.order.id == 'TradeRoutine_BasicMid') or (this.assignedcontrolled.order.id == 'TradeRoutine_Standard') or (this.assignedcontrolled.order.id == 'TradeRoutine_Expert')">
 			<set_value name="$thisorder" exact="this.assignedcontrolled.order"/>
 		</do_if>
 	</replace>
 
 	<replace sel="/aiscript/attention//do_if[@value=&quot;(this.assignedcontrolled.order.id == 'TradeRoutine') or (this.assignedcontrolled.order.id == 'TradeRoutine_Basic') or (this.assignedcontrolled.order.id == 'TradeRoutine_Advanced')&quot;]">
-		<do_if value="(this.assignedcontrolled.order.id == 'TradeRoutine') or (this.assignedcontrolled.order.id == 'TradeRoutine_Basic') or (this.assignedcontrolled.order.id == 'TradeRoutine_Advanced') or (this.assignedcontrolled.order.id == 'TradeRoutine_BasicMid') or (this.assignedcontrolled.order.id == 'TradeRoutine_BasicMidStandard') or (this.assignedcontrolled.order.id == 'TradeRoutine_BasicMidStandardAdvanced') or (this.assignedcontrolled.order.id == 'TradeRoutine_BasicMidStandardAdvancedExpert')">
+		<do_if value="(this.assignedcontrolled.order.id == 'TradeRoutine') or (this.assignedcontrolled.order.id == 'TradeRoutine_Basic') or (this.assignedcontrolled.order.id == 'TradeRoutine_Advanced') or (this.assignedcontrolled.order.id == 'TradeRoutine_BasicMid') or (this.assignedcontrolled.order.id == 'TradeRoutine_Standard') or (this.assignedcontrolled.order.id == 'TradeRoutine_Expert')">
 			<set_order_syncpoint_reached order="this.assignedcontrolled.order"/>
 		</do_if>
 	</replace>
