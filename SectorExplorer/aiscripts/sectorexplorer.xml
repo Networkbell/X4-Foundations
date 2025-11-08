@@ -166,14 +166,15 @@
 								</do_if>
 
 								<do_if value="$allow">
-									<do_if value="$fs_unique">
-										<set_value name="global.$fs_explored_sectors.{$fs_target}" exact="table[]"/>
-										<set_value name="global.$fs_explored_sectors.{$fs_target}.{1}" exact="$fs_radius"/>
-										<!-- 90d = 7 776 000s -->
+									<do_if value="$fs_unique">										
+										<do_if value="not global.$fs_explored_sectors.{$fs_target}?">
+											<set_value name="global.$fs_explored_sectors.{$fs_target}" exact="table[]"/>
+											<set_value name="global.$fs_explored_sectors.{$fs_target}.{1}" exact="0km"/>
+										</do_if>
+										<!-- 90 jours d’exclusivité -->
 										<set_value name="global.$fs_explored_sectors.{$fs_target}.{2}" exact="player.age + 7776000s"/>
 										<set_value name="global.$fs_explored_sectors.{$fs_target}.{3}" exact="true"/>
-
-										<debug_text text="'fs_exp: sector %1 marked unique until %2'.[$fs_target.knownname, global.$fs_explored_sectors.{$fs_target}.{2}]" chance="$debugchance"/>
+										<debug_text text="'fs_exp: secteur unique %1 (lock jusqu\'à %2)'.[$fs_target.knownname, global.$fs_explored_sectors.{$fs_target}.{2}]" chance="$debugchance"/>
 									</do_if>
 									<do_else>
 										<set_value name="global.$fs_explored_sectors.{$fs_target}.{2}" exact="player.age + 600s"/>
@@ -478,21 +479,40 @@
 			<do_if value="$fs_stage == 7">
 				<set_value name="$fs_stage" exact="0"/>
 
-				<set_value name="$fs_range" exact="$fs_range + $fs_delta"/>
+				<!-- Incrément avec clamp pour ne pas dépasser le rayon cible -->
+				<set_value name="$next_range" exact="$fs_range + $fs_delta"/>
+				<do_if value="$next_range gt $fs_radius">
+					<set_value name="$fs_range" exact="$fs_radius"/>
+				</do_if>
+				<do_else>
+					<set_value name="$fs_range" exact="$next_range"/>
+				</do_else>
+				<remove_value name="$next_range"/>
+
 				<set_value name="$pilot_fs_range" exact="$fs_range"/>
 				<set_value name="$ship.pilot.fs_exp_range" exact="$pilot_fs_range"/>
 
-				<do_if value="global.$fs_explored_sectors.{$sector}.{1} lt $fs_range">
-					<set_value name="global.$fs_explored_sectors.{$sector}" exact="table[]"/>
+				<do_if value="(not global.$fs_explored_sectors.{$sector}?) or (global.$fs_explored_sectors.{$sector}.{1} lt $fs_range)">
+					<do_if value="not global.$fs_explored_sectors.{$sector}?">
+						<set_value name="global.$fs_explored_sectors.{$sector}" exact="table[]"/>
+						<set_value name="global.$fs_explored_sectors.{$sector}.{2}" exact="player.age + 600s"/>
+					</do_if>
 					<set_value name="global.$fs_explored_sectors.{$sector}.{1}" exact="$fs_range"/>
-					<set_value name="global.$fs_explored_sectors.{$sector}.{2}" exact="player.age + 600s"/>
+					<do_if value="$fs_unique">
+						<do_if value="not @global.$fs_explored_sectors.{$sector}.{3}">
+							<set_value name="global.$fs_explored_sectors.{$sector}.{3}" exact="true"/>
+						</do_if>
+					</do_if>
+					<do_else>
+						<set_value name="global.$fs_explored_sectors.{$sector}.{2}" exact="player.age + 600s"/>
+					</do_else>
 				</do_if>
 
 				<do_if value="$fs_range gt 150km">
 					<apply_experience entity="$ship.pilot" experience="'fs_exp'" factor="1.0"/>
 				</do_if>
 
-				<do_if value="$fs_range gt $fs_radius">
+				<do_if value="$fs_range ge $fs_radius">
 					<set_command_action commandaction="commandaction.standingby"/>
 
 					<do_if value="@$fs_notify">
@@ -502,7 +522,6 @@
 					<write_to_logbook category="general" title="{314154, 1}" text="{314154, 3}.[ $ship.name, $sector.knownname ]" />
 
 					<do_if value="$pilot_fs_probe?">
-						<!--debug_to_file directory="'fs_exp'" name="'debug'" text="'%s: %s delete %s'.[player.age, $ship.knownname, $pilot_fs_probe]" output="false" append="true"/-->
 						<destroy_object object="$pilot_fs_probe" explosion="false" />
 						<remove_value name="$ship.pilot.fs_exp_probe"/>
 						<set_value name="$pilot_fs_probe" exact="null"/>
