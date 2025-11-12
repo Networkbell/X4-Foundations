@@ -5,7 +5,7 @@
     Original author: Assailer
     Adaptations and compatibility fixes for X4 v8.0 by: Damonya
     I (Damonya) only corrected and published this version on my GitHub.
-    Version 1.2 Damonya
+    Version 1.3 Damonya
 -->
 <aiscript name="sectorexplorer" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="5">
 	<order id="SectorExplorer" name="{314154, 12}" description="{314154, 12}" category="navigation" infinite="true">
@@ -58,27 +58,6 @@
 		<do_if value="not global.$fs_explored_sectors?">
 			<set_value name="global.$fs_explored_sectors" exact="table[]"/>
 		</do_if>
-
-		<do_if value="$ship.pilot.fs_exp_stage?">
-			<set_value name="$pilot_fs_stage" exact="$ship.pilot.fs_exp_stage"/>
-		</do_if>
-		<do_else>
-			<set_value name="$pilot_fs_stage" exact="0"/>
-		</do_else>
-
-		<do_if value="$ship.pilot.fs_exp_range?">
-			<set_value name="$pilot_fs_range" exact="$ship.pilot.fs_exp_range"/>
-		</do_if>
-		<do_else>
-			<set_value name="$pilot_fs_range" exact="0km"/>
-		</do_else>
-
-		<do_if value="$ship.pilot.fs_exp_probe?">
-			<set_value name="$pilot_fs_probe" exact="$ship.pilot.fs_exp_probe"/>
-		</do_if>
-		<do_else>
-			<set_value name="$pilot_fs_probe" exact="null"/>
-		</do_else>
 
 		<do_if value="$fs_reset and global.$fs_explored_sectors.{$sector}?">
 			<set_value name="global.$fs_explored_sectors.{$sector}" exact="table[]"/>
@@ -165,7 +144,7 @@
 											<set_value name="global.$fs_explored_sectors.{$fs_target}" exact="table[]"/>
 											<set_value name="global.$fs_explored_sectors.{$fs_target}.{1}" exact="0km"/>
 										</do_if>
-										<!-- 90 jours d’exclusivité -->
+										<!-- 90 days -->
 										<set_value name="global.$fs_explored_sectors.{$fs_target}.{2}" exact="player.age + 7776000s"/>
 										<set_value name="global.$fs_explored_sectors.{$fs_target}.{3}" exact="true"/>
 										<debug_text text="'fs_exp: secteur unique %1 (lock jusqu\'à %2)'.[$fs_target.knownname, global.$fs_explored_sectors.{$fs_target}.{2}]" chance="$debugchance"/>
@@ -190,7 +169,7 @@
 				<resume label="start"/>
 			</do_if>
 			<do_else>
-				<write_to_logbook category="general" title="{314154, 1}" text="{314154, 2}.[$ship.name, $sector.knownname]" />
+				<write_to_logbook category="general" title="{314154, 1}" text="{314154, 2}.[ $ship.name, $sector.knownname]" />
 
 				<wait min="3s" max="5s"/>
 				<resume label="explorer_objects"/>
@@ -287,7 +266,7 @@
 
 			<!-- setup the hexagonal explorer based on explored progress saved from earlier times -->
 
-			<set_value name="$pilot_fs_stage" exact="0"/>
+			<set_value name="$ship.pilot.$fs_stage" exact="0"/>
 			<set_value name="$fs_range" exact="$fs_delta"/>
 
 			<!-- creation -->
@@ -303,8 +282,7 @@
 				<set_value name="$fs_range" exact="$fs_range + $fs_delta"/>
 			</do_while>
 
-			<set_value name="$pilot_fs_range" exact="$fs_range"/>
-			<set_value name="$ship.pilot.fs_exp_range" exact="$pilot_fs_range"/>
+			<set_value name="$ship.pilot.$fs_range" exact="$fs_range"/>
 
 			<wait min="1s" max="2s"/>
 			<resume label="explorer_loop"/>
@@ -312,8 +290,8 @@
 			<!-- EXPLORER LOOP (0 - 7) ****************************************************************** -->
 			<label name="explorer_loop"/>
 
-			<set_value name="$fs_stage" exact="$pilot_fs_stage"/>
-			<set_value name="$fs_range" exact="$pilot_fs_range"/>
+			<set_value name="$fs_stage" exact="$ship.pilot.$fs_stage"/>
+			<set_value name="$fs_range" exact="$ship.pilot.$fs_range"/>
 
 			<do_if value="not $fs_satscan?">
 				<set_value name="$fs_satscan" exact="false"/>
@@ -352,17 +330,16 @@
 
 						<create_position name="$finalpos" x="$fs_anchor.x + sin($fs_angle) * $fs_range" y="$fs_anchor.y + 40km" z="$fs_anchor.z + cos($fs_angle) * $fs_range" space="$sector"/>
 
-						<do_if value="(not $pilot_fs_probe?) or (not $pilot_fs_probe.isclass.satellite)">
+						<do_if value="(not $ship.pilot.$fs_probe?) or (not $ship.pilot.$fs_probe.isclass.satellite)">
 
-							<create_object name="$pilot_fs_probe" macro="macro.eq_arg_satellite_02_macro" owner="faction.player" sector="$sector">
+							<create_object name="$tmp_probe" macro="macro.eq_arg_satellite_02_macro" owner="faction.player" sector="$sector">
 								<position x="$finalpos.x" y="$finalpos.y" z="$finalpos.z"/>
 							</create_object>
-							<do_if value="$pilot_fs_probe?">
-								<set_value name="$ship.pilot.fs_exp_probe" exact="$pilot_fs_probe"/>
+							<do_if value="$tmp_probe?">
+								<set_value name="$ship.pilot.$fs_probe" exact="$tmp_probe"/>
 							</do_if>
 
-
-							<do_if value="not $pilot_fs_probe?">
+							<do_if value="not $ship.pilot.$fs_probe?">
 								<debug_text text="'fs_exp: macro eq_arg_satellite_02_macro failed - trying launch_satellite fallback'" chance="$debugchance"/>
 								<do_if value="$ship.ammostorage.{deployablecategory.satellite}.count gt 0">
 									<launch_satellite object="$ship" macro="macro.eq_arg_satellite_02_macro"/>
@@ -371,26 +348,24 @@
 										<match_distance object="$ship" max="1km"/>
 									</find_object>
 									<do_if value="$recent_satellites.count">
-										<set_value name="$pilot_fs_probe" exact="$recent_satellites.{1}"/>
-										<set_value name="$ship.pilot.fs_exp_probe" exact="$pilot_fs_probe"/>
+										<set_value name="$ship.pilot.$fs_probe" exact="$recent_satellites.{1}"/>
 									</do_if>
 									<remove_value name="$recent_satellites"/>
 								</do_if>
 							</do_if>
 
-
-							<do_if value="not $pilot_fs_probe?">
+							<do_if value="not $ship.pilot.$fs_probe?">
 								<debug_text text="'fs_exp: launch_satellite fallback failed - trying backup macro eq_arg_satellite_01_macro'" chance="$debugchance"/>
-								<create_object name="$pilot_fs_probe" macro="macro.eq_arg_satellite_01_macro" owner="faction.player" sector="$sector">
+								<create_object name="$tmp_probe" macro="macro.eq_arg_satellite_01_macro" owner="faction.player" sector="$sector">
 									<position x="$finalpos.x" y="$finalpos.y" z="$finalpos.z"/>
 								</create_object>
-								<do_if value="$pilot_fs_probe?">
-									<set_value name="$ship.pilot.fs_exp_probe" exact="$pilot_fs_probe"/>
+								<do_if value="$tmp_probe?">
+									<set_value name="$ship.pilot.$fs_probe" exact="$tmp_probe"/>
 								</do_if>
 							</do_if>
 						</do_if>
 
-						<warp object="$pilot_fs_probe" sector="$sector">
+						<warp object="$ship.pilot.$fs_probe" sector="$sector">
 							<position value="$finalpos"/>
 						</warp>
 
@@ -399,28 +374,22 @@
 						<set_value name="$fs_angle" exact="$fs_angle + 2deg"/>
 					</do_while>
 
-					<set_value name="$pilot_fs_stage" exact="6"/>
-					<set_value name="$ship.pilot.fs_exp_stage" exact="$pilot_fs_stage"/>
+					<set_value name="$fs_stage" exact="6"/>
 				</do_elseif>
 				<do_elseif value="$fs_stage == 2">
-					<set_value name="$pilot_fs_stage" exact="0"/>
-					<set_value name="$ship.pilot.fs_exp_stage" exact="$pilot_fs_stage"/>
+					<set_value name="$fs_stage" exact="0"/>
 				</do_elseif>
 				<do_elseif value="$fs_stage == 3">
-					<set_value name="$pilot_fs_stage" exact="0"/>
-					<set_value name="$ship.pilot.fs_exp_stage" exact="$pilot_fs_stage"/>
+					<set_value name="$fs_stage" exact="0"/>
 				</do_elseif>
 				<do_elseif value="$fs_stage == 4">
-					<set_value name="$pilot_fs_stage" exact="0"/>
-					<set_value name="$ship.pilot.fs_exp_stage" exact="$pilot_fs_stage"/>
+					<set_value name="$fs_stage" exact="0"/>
 				</do_elseif>
 				<do_elseif value="$fs_stage == 5">
-					<set_value name="$pilot_fs_stage" exact="0"/>
-					<set_value name="$ship.pilot.fs_exp_stage" exact="$pilot_fs_stage"/>
+					<set_value name="$fs_stage" exact="0"/>
 				</do_elseif>
 				<do_elseif value="$fs_stage == 6">
-					<set_value name="$pilot_fs_stage" exact="0"/>
-					<set_value name="$ship.pilot.fs_exp_stage" exact="$pilot_fs_stage"/>
+					<set_value name="$fs_stage" exact="0"/>
 				</do_elseif>
 				<do_elseif value="$fs_stage ge 7">
 					<resume label="start"/>
@@ -487,8 +456,7 @@
 				</do_else>
 				<remove_value name="$next_range"/>
 
-				<set_value name="$pilot_fs_range" exact="$fs_range"/>
-				<set_value name="$ship.pilot.fs_exp_range" exact="$pilot_fs_range"/>
+				<set_value name="$ship.pilot.$fs_range" exact="$fs_range"/>
 
 				<do_if value="(not global.$fs_explored_sectors.{$sector}?) or (global.$fs_explored_sectors.{$sector}.{1} lt $fs_range)">
 					<do_if value="not global.$fs_explored_sectors.{$sector}?">
@@ -519,10 +487,9 @@
 
 					<write_to_logbook category="general" title="{314154, 1}" text="{314154, 3}.[ $ship.name, $sector.knownname ]" />
 
-					<do_if value="$pilot_fs_probe?">
-						<destroy_object object="$pilot_fs_probe" explosion="false" />
-						<remove_value name="$ship.pilot.fs_exp_probe"/>
-						<set_value name="$pilot_fs_probe" exact="null"/>
+					<do_if value="$ship.pilot.$fs_probe?">
+						<destroy_object object="$ship.pilot.$fs_probe" explosion="false" />
+						<remove_value name="$ship.pilot.$fs_probe"/>
 					</do_if>
 
 					<wait min="1s" max="2s"/>
@@ -530,17 +497,15 @@
 				</do_if>
 			</do_if>
 
-			<set_value name="$pilot_fs_stage" exact="$fs_stage"/>
-			<set_value name="$ship.pilot.fs_exp_stage" exact="$pilot_fs_stage"/>
+			<set_value name="$ship.pilot.$fs_stage" exact="$fs_stage"/>
 			<resume label="explorer_loop"/>
 
 		</actions>
 	</attention>
 	<on_abort>
-		<do_if value="$pilot_fs_probe?">
-			<destroy_object object="$pilot_fs_probe" explosion="false" />
-			<remove_value name="$ship.pilot.fs_exp_probe"/>
-			<set_value name="$pilot_fs_probe" exact="null"/>
+		<do_if value="$ship.pilot.$fs_probe?">
+			<destroy_object object="$ship.pilot.$fs_probe" explosion="false" />
+			<remove_value name="$ship.pilot.$fs_probe"/>
 		</do_if>
 	</on_abort>
 </aiscript>
