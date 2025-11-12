@@ -26,7 +26,8 @@
 				<input_param name="step" value="10s"/>
 			</param>
 			<param name="autoscan_processed" type="internal" default="[]" text="(internal) autoscan processed" comment="Liste des stations déjà traitées (persistance au niveau de l'ordre)."/>
-
+			<param name="standoffextra" type="length" default="15km" advanced="true" text="Retrait supplémentaire hostile" comment="Distance ajoutée au rayon effectif pour se repositionner après scan hostile sûr."/>
+			<param name="skiphostilescan" type="bool" default="false" advanced="true" text="Ne pas scanner stations hostiles" comment="Si true, les stations hostiles sûres sont ignorées (traitées) sans scan."/>
 		</params>
 		<skill min="40"/>
 		<requires>
@@ -36,6 +37,55 @@
 	</order>
 
 	<interrupts>
+
+		<!-- Library: factor scans -->
+		<library>
+			<actions name="ScanStationBasic">
+				<do_if value="not $localtarget?">
+					<debug_text text="'ScanStationBasic: $localtarget absent'" chance="$debugchance"/>
+					<return/>
+				</do_if>
+				<set_known object="$localtarget" known="true"/>
+				<debug_text text="'AutoScan: set_object_scanned %s'.[@$localtarget.knownname]" chance="$debugchance"/>
+				<set_object_scanned object="$localtarget"/>
+				<do_if value="not $list_objectsscanned.indexof.{$localtarget}">
+					<append_to_list name="$list_objectsscanned" exact="$localtarget"/>
+				</do_if>
+				<do_if value="not $list_stationsprocessed.indexof.{$localtarget}">
+					<append_to_list name="$list_stationsprocessed" exact="$localtarget"/>
+				</do_if>
+				<do_if value="$localtarget.container and not $list_stationsprocessed.indexof.{$localtarget.container}">
+					<append_to_list name="$list_stationsprocessed" exact="$localtarget.container"/>
+				</do_if>
+				<set_value name="$autoscan_processed" exact="$list_stationsprocessed"/>
+				<set_value name="$processed" exact="true"/>
+			</actions>
+
+			<actions name="ScanStationHostileRetreat">
+				<include_interrupt_actions ref="ScanStationBasic"/>
+				<do_if value="$processed">
+					<set_value name="$standoffdist" exact="$effectivescanningrange + $standoffextra"/>
+					<create_position name="$retreatpos" space="$localtarget" value="position.[0m, 0m, -$standoffdist]"/>
+					<debug_text text="'AutoScan: retrait %1 (vers -%2)'.[@$localtarget.knownname, $standoffdist]" chance="$debugchance"/>
+				</do_if>
+			</actions>
+
+			<actions name="MarkStationProcessedNoScan">
+				<do_if value="not $localtarget?">
+					<return/>
+				</do_if>
+				<debug_text text="'AutoScan: traité sans scan %1'.[@$localtarget.knownname]" chance="$debugchance"/>
+				<do_if value="not $list_stationsprocessed.indexof.{$localtarget}">
+					<append_to_list name="$list_stationsprocessed" exact="$localtarget"/>
+				</do_if>
+				<do_if value="$localtarget.container and not $list_stationsprocessed.indexof.{$localtarget.container}">
+					<append_to_list name="$list_stationsprocessed" exact="$localtarget.container"/>
+				</do_if>
+				<set_value name="$autoscan_processed" exact="$list_stationsprocessed"/>
+				<set_value name="$processed" exact="true"/>
+			</actions>
+		</library>
+
 		<!-- Handler triggered upon docking to perform the scan (tolerant if event.param is null) -->
 		<handler>
 			<conditions>
@@ -71,7 +121,7 @@
 							</do_if>
 						</do_if>
 
-						<!-- Scanner at the dock: a hard scan is required to reveal the information. -->
+						<!-- Scan at the dock-->
 						<do_if value="@$scantarget">
 							<set_known object="$scantarget" known="true"/>
 							<debug_text text="'AutoScan (dock): set_object_scanned %s (révélé: %s%%)'.[@$scantarget.knownname, $scantarget.revealedpercentage]" chance="$debugchance"/>
@@ -133,6 +183,7 @@
 							</do_if>
 						</do_if>
 
+						<!-- scan restoration (same as handler assignedcontrolled) -->
 						<do_if value="@$scantarget">
 							<set_known object="$scantarget" known="true"/>
 							<debug_text text="'AutoScan (dock,ship): set_object_scanned %s (révélé: %s%%)'.[@$scantarget.knownname, $scantarget.revealedpercentage]" chance="$debugchance"/>
@@ -140,7 +191,6 @@
 							<do_if value="not $list_objectsscanned.indexof.{$scantarget}">
 								<append_to_list name="$list_objectsscanned" exact="$scantarget"/>
 							</do_if>
-
 							<do_if value="$visitstations">
 								<do_if value="not $list_stationsprocessed.indexof.{$scantarget}">
 									<append_to_list name="$list_stationsprocessed" exact="$scantarget"/>
@@ -160,13 +210,16 @@
 				</do_if>
 			</actions>
 		</handler>
-
 		<!-- Generic engine handlers -->
 		<handler ref="SectorChangeHandler"/>
+		<handler ref="AttackHandler" />
+		<handler ref="MissileLockHandler" />
+		<handler ref="ScannedHandler" />
+		<handler ref="InspectedHandler"/>
+		<handler ref="FoundAbandonedHandler"/>
+		<handler ref="FoundLockboxHandler"/>
+		<handler ref="ResupplyHandler" />
 		<handler ref="TargetInvalidHandler"/>
-		<handler ref="AttackHandler"/>
-		<handler ref="MissileLockHandler"/>
-		<handler ref="ResupplyHandler"/>
 		<handler ref="TideHandler"/>
 	</interrupts>
 
@@ -256,7 +309,6 @@
 		</do_if>
 	</patch>
 
-
 	<patch sinceversion="20">
 		<do_if value="not @$list_stationsprocessed and not @$autoscan_processed.count">
 			<set_value name="$list_stationsprocessed" exact="[]"/>
@@ -274,6 +326,9 @@
 				</do_if>
 				<remove_value name="$stances"/>
 			</do_if>
+
+			<!-- blacklist -->
+			<include_interrupt_actions ref="GetBlacklistgroup"/>
 
 			<label name="start"/>
 
@@ -313,9 +368,6 @@
 				<set_value name="$time_init" exact="player.age"/>
 			</do_elseif>
 
-			
-
-			<!-- reset recon data (don't reset if already present, to preserve the state after a Dock) -->
 			<do_if value="not @$list_objectsscanned">
 				<set_value name="$list_objectsscanned" exact="[]"/>
 			</do_if>
@@ -323,7 +375,6 @@
 				<set_value name="$pendingdocks" exact="table[]"/>
 			</do_if>
 
-			<!-- Update/persist the list of stations processed on the ship. -->
 			<do_if value="not @$list_stationsprocessed">
 				<set_value name="$list_stationsprocessed" exact="$autoscan_processed"/>
 			</do_if>
@@ -421,12 +472,6 @@
 			<set_value name="$inv" exact="1.0 - $s"/>
 			<set_value name="$inv2" exact="$inv * $inv"/>
 			<set_value name="$skillwait" exact="$WAIT_MIN + $inv2 * ($WAIT_MAX - $WAIT_MIN)"/>
-			<!-- pilotskill 0  → s = 0.00  → skillwait = 300.0 s (5:00.0) -->
-			<!-- pilotskill 3  → s = 0.20  → skillwait = 195.6 s (3:15.6) -->
-			<!-- pilotskill 6  → s = 0.40  → skillwait = 114.4 s (1:54.4) -->
-			<!-- pilotskill 9  → s = 0.60  → skillwait = 56.4  s (0:56.4) -->
-			<!-- pilotskill 12 → s = 0.80  → skillwait = 21.6  s (0:21.6) -->
-			<!-- pilotskill 15 → s = 1.00  → skillwait = 10.0  s (0:10.0) -->
 
 			<do_if value="($timeout gt 0s) and $time_init? and (player.age ge ($time_init + $timeout))">
 				<debug_text text="'AutoScan: timeout reached in %s'.[$targetspace.knownname]" chance="$debugchance"/>
@@ -440,22 +485,18 @@
 				</find_station>
 
 				<do_all exact="@$st_in_zone.count" counter="$k">
-
 					<do_if value="$st_in_zone.{$k}.exists">
 						<set_value name="$shouldprocess" exact="false"/>
-
 						<!-- Only once per session -->
 						<do_if value="not $list_stationsprocessed.indexof.{$st_in_zone.{$k}}">
 							<set_value name="$shouldprocess" exact="true"/>
 						</do_if>
-
 						<!-- Filter radius -->
 						<do_if value="$shouldprocess and @$radius and @$scancenter.{1}">
 							<do_if value="$st_in_zone.{$k}.distanceto.[$scancenter.{1}, $scancenter.{2}] gt $radius">
 								<set_value name="$shouldprocess" exact="false"/>
 							</do_if>
 						</do_if>
-
 						<!-- Avoid duplicate docks in progress. -->
 						<do_if value="$shouldprocess and $visitstations">
 							<do_if value="@$pendingdocks.{$st_in_zone.{$k}} or (@$st_in_zone.{$k}.container and @$pendingdocks.{$st_in_zone.{$k}.container})">
@@ -463,15 +504,12 @@
 								<debug_text text="'AutoScan: Station %s déjà en cours de traitement, ignorée'.[@$st_in_zone.{$k}.knownname]" chance="$debugchance"/>
 							</do_if>
 						</do_if>
-
 						<do_if value="$shouldprocess">
 							<append_to_list name="$list_targets" exact="$st_in_zone.{$k}"/>
 						</do_if>
 					</do_if>
 				</do_all>
-
 				<remove_value name="$st_in_zone"/>
-
 			</do_for_each>
 
 			<do_if value="not @$list_targets.count">
@@ -489,6 +527,65 @@
 				<resume label="scanloop"/>
 			</do_if>
 
+			<!-- Classification: blacklist/hostile -->
+			<set_value name="$dangerous" exact="@$localtarget.owner and ($localtarget.owner.mayattack.{this.assignedcontrolled} or $localtarget.owner.hasrelation.killmilitary.{this.trueowner})"/>
+
+			<!-- Blacklist: civilian + military -->
+			<set_value name="$objBlacklisted" exact="
+				$localtarget.isblacklisted.{blacklisttype.sectoractivity}.{blacklistgroup.civilian}.{this.assignedcontrolled}
+				or $localtarget.isblacklisted.{blacklisttype.sectoractivity}.{blacklistgroup.military}.{this.assignedcontrolled}
+			"/>
+			<set_value name="$sectorBlacklisted" exact="
+				$localtarget.sector.isblacklisted.{blacklisttype.sectoractivity}.{blacklistgroup.civilian}.{this.assignedcontrolled}
+				or $localtarget.sector.isblacklisted.{blacklisttype.sectoractivity}.{blacklistgroup.military}.{this.assignedcontrolled}
+			"/>
+			<set_value name="$blacklisted" exact="$objBlacklisted or $sectorBlacklisted"/>
+
+			<!-- Hostile safe -->
+			<set_value name="$hostile_safe" exact="(this.assignedcontrolled.relationto.{$localtarget.owner} lt 0) and not $dangerous"/>
+			
+			
+			<!-- Dangerous -> go ahead -->
+			<do_if value="$dangerous">
+				<debug_text text="'AutoScan: station DANGEREUSE ignorée sans scan: %1'.[$localtarget.knownname]" chance="$debugchance"/>
+				<do_if value="not $list_stationsprocessed.indexof.{$localtarget}">
+					<append_to_list name="$list_stationsprocessed" exact="$localtarget"/>
+				</do_if>
+				<do_if value="$localtarget.container and not $list_stationsprocessed.indexof.{$localtarget.container}">
+					<append_to_list name="$list_stationsprocessed" exact="$localtarget.container"/>
+				</do_if>
+				<set_value name="$autoscan_processed" exact="$list_stationsprocessed"/>
+				<remove_value name="$dangerous"/>
+				<remove_value name="$objBlacklisted"/>
+				<remove_value name="$sectorBlacklisted"/>
+				<remove_value name="$blacklisted"/>
+				<remove_value name="$hostile_safe"/>
+				<remove_value name="$localtarget"/>
+				<wait exact="$skillwait"/>
+				<resume label="scanloop"/>
+			</do_if>
+
+			<!-- Blacklist: no amical -->
+			<do_if value="$blacklisted and (this.assignedcontrolled.relationto.{$localtarget.owner} ge 0)">
+				<debug_text text="'AutoScan: station BLACKLIST ignorée sans scan: %1'.[$localtarget.knownname]" chance="$debugchance"/>
+				<do_if value="not $list_stationsprocessed.indexof.{$localtarget}">
+					<append_to_list name="$list_stationsprocessed" exact="$localtarget"/>
+				</do_if>
+				<do_if value="$localtarget.container and not $list_stationsprocessed.indexof.{$localtarget.container}">
+					<append_to_list name="$list_stationsprocessed" exact="$localtarget.container"/>
+				</do_if>
+				<set_value name="$autoscan_processed" exact="$list_stationsprocessed"/>
+				<remove_value name="$dangerous"/>
+				<remove_value name="$objBlacklisted"/>
+				<remove_value name="$sectorBlacklisted"/>
+				<remove_value name="$blacklisted"/>
+				<remove_value name="$hostile_safe"/>
+				<remove_value name="$localtarget"/>
+				<wait exact="$skillwait"/>
+				<resume label="scanloop"/>
+			</do_if>
+
+			<!-- Come on -->
 			<set_value name="$effectivescanningrange" exact="[($localtarget.size / 2.0 + 250m), 1200m].max"/>
 			<create_position name="$targetpos" space="$localtarget" value="position.[0m, 0m, -$effectivescanningrange]"/>
 			<create_orientation name="$rot" refobject="$localtarget" orientation="look_at">
@@ -522,6 +619,7 @@
 				<set_value name="$autoscan_processed" exact="$list_stationsprocessed"/>
 				<debug_text text="'AutoScan: Station %s marquée comme traitée (échec mouvement)'.[@$localtarget.knownname]" chance="$debugchance"/>
 
+				<remove_value name="$hostile_safe"/>
 				<remove_value name="$localtarget"/>
 				<wait exact="$skillwait"/>
 				<resume label="scanloop"/>
@@ -538,15 +636,31 @@
 
 			<set_value name="$processed" exact="false"/>
 
-			<!-- Remote scan only if we don't visit. -->
+			<!-- Scan no dock -->
 			<do_if value="not $visitstations">
-				<set_known object="$localtarget" known="true"/>
-				<debug_text text="'AutoScan: set_object_scanned %s'.[@$localtarget.knownname]" chance="$debugchance"/>
-				<set_object_scanned object="$localtarget"/>
-				<set_value name="$processed" exact="true"/>
+				<do_if value="$hostile_safe and not $skiphostilescan">
+					<include_interrupt_actions ref="ScanStationHostileRetreat"/>
+				</do_if>
+				<do_elseif value="$hostile_safe and $skiphostilescan">
+					<include_interrupt_actions ref="MarkStationProcessedNoScan"/>
+				</do_elseif>
+				<do_else>
+					<include_interrupt_actions ref="ScanStationBasic"/>
+				</do_else>
 			</do_if>
 
-			<!-- If requested, attempt a dock (then wait/undock) at the visited station. -->
+			<!-- Come back if library OK -->
+			<do_if value="@$retreatpos">
+				<run_script name="'move.generic'">
+					<param name="destination" value="$localtarget"/>
+					<param name="position" value="$retreatpos"/>
+					<param name="debugchance" value="$debugchance"/>
+				</run_script>
+				<remove_value name="$retreatpos"/>
+				<remove_value name="$standoffdist"/>
+			</do_if>
+
+			<!-- Dock -->
 			<do_if value="$visitstations">
 				<do_if value="not (@$radius and @$scancenter.{1}) or ($localtarget.distanceto.[$scancenter.{1}, $scancenter.{2}] le $radius)">
 					<set_value name="$docktarget" exact="$localtarget"/>
@@ -554,31 +668,20 @@
 						<set_value name="$docktarget" exact="$localtarget.container"/>
 					</do_if>
 
-					<do_if value="this.assignedcontrolled.relationto.{$docktarget.owner} ge 0">
+					<set_value name="$friendly_safe" exact="(this.assignedcontrolled.relationto.{$docktarget.owner} ge 0)
+						and not ($docktarget.owner.mayattack.{this.assignedcontrolled} or $docktarget.owner.hasrelation.killmilitary.{this.trueowner})
+						and not ($docktarget.isblacklisted.{blacklisttype.sectoractivity}.{blacklistgroup.civilian}.{this.assignedcontrolled}
+						         or $docktarget.isblacklisted.{blacklisttype.sectoractivity}.{blacklistgroup.military}.{this.assignedcontrolled})
+						and not ($docktarget.sector.isblacklisted.{blacklisttype.sectoractivity}.{blacklistgroup.civilian}.{this.assignedcontrolled}
+						         or $docktarget.sector.isblacklisted.{blacklisttype.sectoractivity}.{blacklistgroup.military}.{this.assignedcontrolled})"/>
+					
+					<do_if value="$friendly_safe">
 						<do_if value="not @$pendingdocks.{$docktarget}">
 							<set_value name="$pendingdocks.{$docktarget}" exact="true"/>
-
-							<!-- Mark as "TREATED" as soon as the decision to visit is made + follow-up. -->
-							<do_if value="not $list_stationsprocessed.indexof.{$localtarget}">
-								<append_to_list name="$list_stationsprocessed" exact="$localtarget"/>
-							</do_if>
-							<do_if value="$localtarget.container and not $list_stationsprocessed.indexof.{$localtarget.container}">
-								<append_to_list name="$list_stationsprocessed" exact="$localtarget.container"/>
-							</do_if>
-							<set_value name="$autoscan_processed" exact="$list_stationsprocessed"/>
-
-							<!-- Hard Scan -->
-							<set_known object="$localtarget" known="true"/>
-							<debug_text text="'AutoScan (pre-dock): set_object_scanned %s'.[@$localtarget.knownname]" chance="$debugchance"/>
-							<set_object_scanned object="$localtarget"/>
-							<set_value name="$processed" exact="true"/>
-							<do_if value="not $list_objectsscanned.indexof.{$localtarget}">
-								<append_to_list name="$list_objectsscanned" exact="$localtarget"/>
-							</do_if>
+							<include_interrupt_actions ref="ScanStationBasic"/>
 
 							<debug_text text="'AutoScan: Dock sur %s (attente %1)'.[@$docktarget.knownname, $skillwait]" chance="$debugchance"/>
 
-							<!-- Internal orchestration: dock -> wait -> undock (without create_order) -->
 							<do_if value="not this.assignedcontrolled.dock or (this.assignedcontrolled.container != $docktarget and @this.assignedcontrolled.container != @$docktarget.container)">
 								<run_script name="'order.dock'" result="$dockresult">
 									<param name="destination" value="$docktarget"/>
@@ -586,9 +689,9 @@
 								</run_script>
 							</do_if>
 
-							<!-- Internal waiting period at the dock, then undock if we are properly moored -->
 							<do_if value="this.assignedcontrolled.dock">
 								<wait exact="$skillwait"/>
+								<set_value name="$skipfinalwait" exact="true"/>
 								<run_script name="'move.undock'"/>
 							</do_if>
 							<do_else>
@@ -598,50 +701,57 @@
 							<remove_value name="$pendingdocks.{$docktarget}"/>
 						</do_if>
 						<do_else>
-							<debug_text text="'AutoScan: Station %s déjà en cours de traitement, ignorée'.[@$docktarget.knownname]" chance="$debugchance"/>
-							<set_value name="$processed" exact="true"/>
+							<debug_text text="'AutoScan: Dock déjà en cours pour %s, scan remote + retrait'.[@$docktarget.knownname]" chance="$debugchance"/>
+							<include_interrupt_actions ref="ScanStationHostileRetreat"/>
 						</do_else>
 					</do_if>
 					<do_else>
-						<!-- Hostile: mark as targeted + remote scan + persistence -->
-						<debug_text text="'AutoScan: dock ignoré (relation hostile) sur %1'.[@$docktarget.knownname]" chance="$debugchance"/>						
-						<do_if value="not $list_stationsprocessed.indexof.{$localtarget}">
-							<append_to_list name="$list_stationsprocessed" exact="$localtarget"/>
+						<do_if value="$hostile_safe and not $skiphostilescan">
+							<debug_text text="'AutoScan: hostile sûr (visitstations) scan + retrait %1'.[@$docktarget.knownname]" chance="$debugchance"/>
+							<include_interrupt_actions ref="ScanStationHostileRetreat"/>
 						</do_if>
-						<do_if value="$localtarget.container and not $list_stationsprocessed.indexof.{$localtarget.container}">
-							<append_to_list name="$list_stationsprocessed" exact="$localtarget.container"/>
-						</do_if>
-						<set_value name="$autoscan_processed" exact="$list_stationsprocessed"/>
-						<set_known object="$localtarget" known="true"/>
-						<debug_text text="'AutoScan: scan à distance (hostile) %s'.[@$localtarget.knownname]" chance="$debugchance"/>
-						<set_object_scanned object="$localtarget"/>
-						<set_value name="$processed" exact="true"/>
+						<do_else>
+							<include_interrupt_actions ref="MarkStationProcessedNoScan"/>
+						</do_else>
 					</do_else>
 
 					<remove_value name="$docktarget"/>
+					<remove_value name="$friendly_safe"/>
 				</do_if>
 				<do_else>
 					<debug_text text="'AutoScan: Station %s hors rayon, ignorée'.[@$localtarget.knownname]" chance="$debugchance"/>
-					<set_value name="$processed" exact="true"/>
+					<include_interrupt_actions ref="MarkStationProcessedNoScan"/>
 				</do_else>
+
+				<!-- Come back if library ok (with visitstations) -->
+				<do_if value="@$retreatpos">
+					<run_script name="'move.generic'">
+						<param name="destination" value="$localtarget"/>
+						<param name="position" value="$retreatpos"/>
+						<param name="debugchance" value="$debugchance"/>
+					</run_script>
+					<remove_value name="$retreatpos"/>
+					<remove_value name="$standoffdist"/>
+				</do_if>
 			</do_if>
 
-			<!-- Mark as completely processed if applicable -->
+			<!-- final: marked if $processed=true -->
 			<do_if value="$processed">
-				<do_if value="not $list_stationsprocessed.indexof.{$localtarget}">
-					<append_to_list name="$list_stationsprocessed" exact="$localtarget"/>
-					<set_value name="$autoscan_processed" exact="$list_stationsprocessed"/>
-					<debug_text text="'AutoScan: Station %s marquée comme complètement traitée'.[@$localtarget.knownname]" chance="$debugchance"/>
-				</do_if>
-				<do_if value="not $list_objectsscanned.indexof.{$localtarget}">
-					<append_to_list name="$list_objectsscanned" exact="$localtarget"/>
-				</do_if>
+				<debug_text text="'AutoScan: %1 traité'.[@$localtarget.knownname]" chance="$debugchance"/>
 			</do_if>
-			
+
+			<remove_value name="$dangerous"/>
+			<remove_value name="$objBlacklisted"/>
+			<remove_value name="$sectorBlacklisted"/>
+			<remove_value name="$blacklisted"/>
+			<remove_value name="$hostile_safe"/>
 			<remove_value name="$processed"/>
 			<remove_value name="$localtarget"/>
 
-			<wait exact="$skillwait"/>
+			<do_if value="not @$skipfinalwait">
+				<wait exact="$skillwait"/>
+			</do_if>
+			<remove_value name="$skipfinalwait"/>
 			<resume label="scanloop"/>
 
 			<label name="end"/>
@@ -655,19 +765,18 @@
 				<do_else>
 					<set_value name="$sector" exact="$targetspace.sector"/>
 				</do_else>
-				
+
 				<do_if value="@$endnotify">
 					<show_help custom="{1819190171, 5}.[ $ship.name, $sector.knownname ]"/>
 				</do_if>
-				
+
 				<write_to_logbook category="general" title="{1819190171, 6}" text="{1819190171, 7}.[ $ship.name, $sector.knownname]"/>
-				
+
 				<remove_value name="$ship"/>
 				<remove_value name="$sector"/>
 			</do_if>
-			
+
 			<remove_value name="$completed"/>
-			
 		</actions>
 	</attention>
 
@@ -676,5 +785,4 @@
 		<remove_value name="$pendingdocks"/>
 		<remove_value name="$list_stationsprocessed"/>
 	</on_abort>
-	
 </aiscript>
