@@ -3,8 +3,8 @@
          name="Enhanced AutoMine AutoTrade"
          description="Adds basic, intermediate, expert auto-mining and auto-trading skills."
          author="DamonYa"
-         version="130"
-         date="2025-11-08"
+         version="131"
+         date="2025-11-15"
          save="false"
          enabled="1">
 		 

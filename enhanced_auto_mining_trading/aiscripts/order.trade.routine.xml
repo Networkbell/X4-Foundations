@@ -1,20 +1,101 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <diff>
+
+	<replace sel="/aiscript/order/params/param[@name='minbuy']/input_param[@name='max']">
+		<input_param name="max" value="[(([@this.ship.commander.tradenpc.skill.management, @this.ship.pilot.skill.piloting].max / 3) * 2) - 1, 0].max"/>
+	</replace>
+	<replace sel="/aiscript/order/params/param[@name='maxbuy']/input_param[@name='max']">
+		<input_param name="max" value="([@this.ship.commander.tradenpc.skill.management, @this.ship.pilot.skill.piloting].max / 3) * 2"/>
+	</replace>
+	<replace sel="/aiscript/order/params/param[@name='minsell']/input_param[@name='max']">
+		<input_param name="max" value="[(([@this.ship.commander.tradenpc.skill.management, @this.ship.pilot.skill.piloting].max / 3) * 2) - 1, 0].max"/>
+	</replace>
+	<replace sel="/aiscript/order/params/param[@name='maxsell']/input_param[@name='max']">
+		<input_param name="max" value="([@this.ship.commander.tradenpc.skill.management, @this.ship.pilot.skill.piloting].max / 3) * 2"/>
+	</replace>
+
+
+	<!--<replace sel="/aiscript/order/params/param[@name='debugchance']">
+		<param name="debugchance" type="bool" default="100" advanced="true" text="{1041, 10086}" comment="Print debug output">
+			<input_param name="truevalue" value="100"/>
+		</param>
+	</replace>
+	<replace sel="/aiscript/order/params/param[@name='debugchance2']">
+		<param name="debugchance2" type="bool" default="100" advanced="true" text="{1041, 10142}" comment="Verbose debug output">
+			<input_param name="truevalue" value="100"/>
+		</param>
+	</replace>-->
+
+
+	<add sel="/aiscript/order/params">
+		<param name="effectiveskill" default="this.ship.combinedskill" type="internal" comment="Effective skill level used for range factor (Expert = 100)"/>
+	</add>
+
+
 	<replace sel="/aiscript/init//do_if[@value=&quot;(this.assignedcontrolled.order.id == 'TradeRoutine') or (this.assignedcontrolled.order.id == 'TradeRoutine_Basic') or (this.assignedcontrolled.order.id == 'TradeRoutine_Advanced')&quot;]">
 		<do_if value="(this.assignedcontrolled.order.id == 'TradeRoutine') or (this.assignedcontrolled.order.id == 'TradeRoutine_Basic') or (this.assignedcontrolled.order.id == 'TradeRoutine_Advanced') or (this.assignedcontrolled.order.id == 'TradeRoutine_BasicMid') or (this.assignedcontrolled.order.id == 'TradeRoutine_Standard') or (this.assignedcontrolled.order.id == 'TradeRoutine_Expert')">
 			<set_value name="$thisorder" exact="this.assignedcontrolled.order"/>
 		</do_if>
 	</replace>
-
 	<replace sel="/aiscript/patch[@sinceversion='10']//do_if[@value=&quot;(this.assignedcontrolled.order.id == 'TradeRoutine') or (this.assignedcontrolled.order.id == 'TradeRoutine_Basic') or (this.assignedcontrolled.order.id == 'TradeRoutine_Advanced')&quot;]">
 		<do_if value="(this.assignedcontrolled.order.id == 'TradeRoutine') or (this.assignedcontrolled.order.id == 'TradeRoutine_Basic') or (this.assignedcontrolled.order.id == 'TradeRoutine_Advanced') or (this.assignedcontrolled.order.id == 'TradeRoutine_BasicMid') or (this.assignedcontrolled.order.id == 'TradeRoutine_Standard') or (this.assignedcontrolled.order.id == 'TradeRoutine_Expert')">
 			<set_value name="$thisorder" exact="this.assignedcontrolled.order"/>
 		</do_if>
 	</replace>
-
 	<replace sel="/aiscript/attention//do_if[@value=&quot;(this.assignedcontrolled.order.id == 'TradeRoutine') or (this.assignedcontrolled.order.id == 'TradeRoutine_Basic') or (this.assignedcontrolled.order.id == 'TradeRoutine_Advanced')&quot;]">
 		<do_if value="(this.assignedcontrolled.order.id == 'TradeRoutine') or (this.assignedcontrolled.order.id == 'TradeRoutine_Basic') or (this.assignedcontrolled.order.id == 'TradeRoutine_Advanced') or (this.assignedcontrolled.order.id == 'TradeRoutine_BasicMid') or (this.assignedcontrolled.order.id == 'TradeRoutine_Standard') or (this.assignedcontrolled.order.id == 'TradeRoutine_Expert')">
 			<set_order_syncpoint_reached order="this.assignedcontrolled.order"/>
 		</do_if>
 	</replace>
+
+
+	<add sel="/aiscript/init/set_value[@name='$time_start']" position="after">
+		<do_if value="($effectiveskill != 0) and ($effectiveskill != 100)">
+			<set_value name="$effectiveskill" exact="this.assignedcontrolled.combinedskill"/>
+		</do_if>
+	</add>
+
+
+	<replace sel="/aiscript/init//do_if[@value='this.isplayerowned']/set_value[@name='$maxrange']">
+		<set_value name="$maxrange" exact="([@this.assignedcontrolled.commander.tradenpc.skill.management, @this.skill.piloting].max / 3) * (if $effectiveskill == 100 then 2 else 1)"/>
+	</replace>
+
+	<add sel="/aiscript/init//do_if[@value='this.isplayerowned']/set_value[@name='$maxrange']" position="after">
+		<do_if value="$effectiveskill == 100">
+			<do_if value="$maxbuy != $maxrange">
+				<set_value name="$maxbuy" exact="$maxrange"/>
+				<do_if value="@$thisorder.exists">
+					<edit_order_param order="$thisorder" param="'maxbuy'" value="$maxbuy"/>
+				</do_if>
+			</do_if>
+			<do_if value="$maxsell != $maxrange">
+				<set_value name="$maxsell" exact="$maxrange"/>
+				<do_if value="@$thisorder.exists">
+					<edit_order_param order="$thisorder" param="'maxsell'" value="$maxsell"/>
+				</do_if>
+			</do_if>
+		</do_if>
+	</add>
+
+
+	<replace sel="/aiscript/patch[@sinceversion='7']//do_if[@value='this.isplayerowned']/set_value[@name='$maxrange']">
+		<set_value name="$maxrange" exact="([@this.assignedcontrolled.commander.tradenpc.skill.management, @this.assignedcontrolled.pilot.skill.piloting].max / 3) * (if $effectiveskill == 100 then 2 else 1)"/>
+	</replace>
+
+	<add sel="/aiscript/patch[@sinceversion='7']//do_if[@value='this.isplayerowned']/set_value[@name='$maxrange']" position="after">
+		<do_if value="$effectiveskill == 100">
+			<do_if value="$maxbuy != $maxrange">
+				<set_value name="$maxbuy" exact="$maxrange"/>
+				<do_if value="@$thisorder.exists">
+					<edit_order_param order="$thisorder" param="'maxbuy'" value="$maxbuy"/>
+				</do_if>
+			</do_if>
+			<do_if value="$maxsell != $maxrange">
+				<set_value name="$maxsell" exact="$maxrange"/>
+				<do_if value="@$thisorder.exists">
+					<edit_order_param order="$thisorder" param="'maxsell'" value="$maxsell"/>
+				</do_if>
+			</do_if>
+		</do_if>
+	</add>
 </diff>
