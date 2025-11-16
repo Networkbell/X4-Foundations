@@ -3,8 +3,8 @@
          name="Basic AutoTrade"
          description="Adds an intermediate trading skill between basic local trading and advanced trading."
          author="DamonYa"
-         version="130"
-         date="2025-11-08"
+         version="131"
+         date="2025-11-15"
          save="false"
          enabled="1">
 		 
