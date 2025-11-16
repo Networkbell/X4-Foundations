@@ -63,6 +63,7 @@
 				<param name="maxbuy" value="$maxbuy"/>
 				<param name="minsell" value="$minsell"/>
 				<param name="maxsell" value="$maxsell"/>
+				<param name="effectiveskill" value="100"/>
 				<param name="duration" value="$duration"/>
 				<param name="tradeforbuildstorage" value="$tradeforbuildstorage"/>
 				<param name="usecover" value="$usecover"/>

@@ -3,8 +3,8 @@
          name="Expert AutoTrade"
          description="Adds an expert trading skill after Advanced AutoTrade like Expert AutoMine"
          author="DamonYa"
-         version="130"
-         date="2025-11-08"
+         version="131"
+         date="2025-11-15"
          save="false"
          enabled="1">
 		 
