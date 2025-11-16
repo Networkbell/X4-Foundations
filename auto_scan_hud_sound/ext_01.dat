@@ -1,6 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<diff>
-	<replace sel="/soundlibrary/sound[@id='notification_detected_infopoint']/volume/@start">0</replace>
-</diff>
-
-
