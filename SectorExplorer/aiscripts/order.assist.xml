@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='utf-8'?>
+<diff>
+  <add
+    sel="/aiscript/attention/actions/do_if[@value='$order.exists or (@$orderdef and $createdefaultorder?)']/do_if[@value='(@$orderdef and $createdefaultorder?) or not $order.requiredskill or (this.combinedskill ge $order.requiredskill)']">
+    <do_if value="$order.id == 'SectorExplorer'">
+      <set_value name="$added" />
+      <do_if value="$createdefaultorder?">
+        <create_order id="$orderdef.$id" object="this.assignedcontrolled" default="true">
+          <param name="fs_usecore" value="$orderdef.$fs_usecore" />
+          <param name="fs_skiphexagon" value="$orderdef.$fs_skiphexagon" />
+          <param name="fs_lockbox" value="$orderdef.$fs_lockbox" />
+          <param name="fs_abandoned" value="$orderdef.$fs_abandoned" />
+          <param name="fs_vaults" value="$orderdef.$fs_vaults" />
+          <param name="fs_continue" value="$orderdef.$fs_continue" />
+          <param name="fs_stations" value="$orderdef.$fs_stations" />
+          <param name="fs_radius" value="$orderdef.$fs_radius" />
+          <param name="fs_delta" value="$orderdef.$fs_delta" />
+          <param name="fs_satscan" value="$orderdef.$fs_satscan" />
+          <param name="fs_reset" value="$orderdef.$fs_reset" />
+          <param name="fs_notify" value="$orderdef.$fs_notify" />
+        </create_order>
+      </do_if>
+      <do_else>
+        <set_value name="$orderdef.$fs_usecore" exact="$order.$fs_usecore" />
+        <set_value name="$orderdef.$fs_skiphexagon" exact="$order.$fs_skiphexagon" />
+        <set_value name="$orderdef.$fs_lockbox" exact="$order.$fs_lockbox" />
+        <set_value name="$orderdef.$fs_abandoned" exact="$order.$fs_abandoned" />
+        <set_value name="$orderdef.$fs_vaults" exact="$order.$fs_vaults" />
+        <set_value name="$orderdef.$fs_continue" exact="$order.$fs_continue" />
+        <set_value name="$orderdef.$fs_stations" exact="$order.$fs_stations" />
+        <set_value name="$orderdef.$fs_radius" exact="$order.$fs_radius" />
+        <set_value name="$orderdef.$fs_delta" exact="$order.$fs_delta" />
+        <set_value name="$orderdef.$fs_satscan" exact="$order.$fs_satscan" />
+        <set_value name="$orderdef.$fs_reset" exact="$order.$fs_reset" />
+        <set_value name="$orderdef.$fs_notify" exact="$order.$fs_notify" />
+        <run_script name="$scriptname">
+          <param name="fs_usecore" value="$orderdef.$fs_usecore" />
+          <param name="fs_skiphexagon" value="$orderdef.$fs_skiphexagon" />
+          <param name="fs_lockbox" value="$orderdef.$fs_lockbox" />
+          <param name="fs_abandoned" value="$orderdef.$fs_abandoned" />
+          <param name="fs_vaults" value="$orderdef.$fs_vaults" />
+          <param name="fs_continue" value="$orderdef.$fs_continue" />
+          <param name="fs_stations" value="$orderdef.$fs_stations" />
+          <param name="fs_radius" value="$orderdef.$fs_radius" />
+          <param name="fs_delta" value="$orderdef.$fs_delta" />
+          <param name="fs_satscan" value="$orderdef.$fs_satscan" />
+          <param name="fs_reset" value="$orderdef.$fs_reset" />
+          <param name="fs_notify" value="$orderdef.$fs_notify" />
+        </run_script>
+      </do_else>
+    </do_if>
+  </add>
+</diff>
